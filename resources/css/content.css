@@ -1,0 +1,13 @@
+.body_content .panel-default .panel-heading{
+	height: 55px;
+}
+.body_content .panel-default .panel-heading .head_title{
+	font-size: 30px;
+	font-weight: bold;
+	float:left;
+}
+.body_content .panel-default .panel-heading .head_date{
+	float:right;
+	margin-right: 20px;
+	margin-top: 20px;
+}

@@ -1,0 +1,39 @@
+body{
+	font-family: Georgia, serif;
+	width: 960px;
+	font-size:18px;
+	margin: 0px auto;
+	background-color: #f5f5d5;
+}
+.head{
+	width: 960px;
+	height: 50px;
+	z-index:9999;
+	position:fixed;
+	top: 0px;
+	border-bottom: 2px solid #d3d3d3;
+}
+.head .blog_title{
+	font-size: 30px;
+	margin: 5px 20px;
+	float:left;
+}
+.head .blog_index{
+	font-size: 20px;
+	float:right;
+	margin: 20px 20px;
+}
+.body_content{
+	min-height: 500px;
+	width: 920px;
+	margin: 60px auto;/*和head相距一定高度*/
+}
+
+
+.foot{
+	border-top: 2px solid #d3d3d3;
+	width: 100%;
+	text-align: center;
+	height: 50px;
+	float: left;
+}
