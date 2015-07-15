@@ -1,10 +1,23 @@
 $(document).ready(function(){
 	var category = getValueBySuffix('category');
 	if(checkValueIsEmpty(category)){
-		//Ä¬ÈÏ Éú»îËæ±Ê
+		//é»˜è®¤ ç”Ÿæ´»éšç¬”
 		category = 'life';
 	}
-	$.getJSON("../resources/json/category.json", function(data){
-		alert("JSON Data:");
+	$.ajax({
+		url:"../resources/json/category.js",
+		type:"GET",
+		dataType : 'json',
+		success:function(data){
+			var container = eval('data.'+category);
+			$('.body_content .panel-title').text(container.title);
+			var content = container.content;
+			for(var i=0;i<content.length;i++){
+				var title = content[i].title;
+				var url = content[i].url;
+				var contentHTML = "<li><a href='"+url+"'>"+title+"</a></li>";
+				$('.body_content .panel-body ul').append(contentHTML);
+			}
+		}
 	});
 });
