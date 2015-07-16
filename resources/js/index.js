@@ -7,8 +7,9 @@ $(document).ready(function(){
 		success:function(data){
 			var str = data.replace(/\r\n/g, "");
 			var da = eval('('+str+')');
+			alert(JSON.stringify(da));
 			//只取前6个
-			for(var i=0;i < da.length && i < 6;i++){
+//			for(var i=0;i < da.length && i < 6;i++){
 //				var indexBlogHTML = "<a href='"+da[i].url+"' class='list-group-item'>"+
 //										"<h4 class='list-group-item-heading'>"+
 //											"<div class='head_title'>"+da[i].title+"</div>"+
@@ -16,9 +17,8 @@ $(document).ready(function(){
 //										"</h4>"+
 //										"<p class='list-group-item-text'>"+da[i].description+"</p>"+
 //									"</a>";
-				indexBlogHTML = "123";
-				$('.body_content .list-group').append(indexBlogHTML);
-			}
+//				$('.body_content .list-group').append(indexBlogHTML);
+//			}
 		}
 	});
 	//get data from category.json fill the index category
