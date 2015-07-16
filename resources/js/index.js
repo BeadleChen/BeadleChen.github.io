@@ -16,6 +16,7 @@ $(document).ready(function(){
 										"</h4>"+
 										"<p class='list-group-item-text'>"+da[i].description+"</p>"+
 									"</a>";
+				alert(indexBlogHTML);
 				$('.body_content .list-group').append(indexBlogHTML);
 			}
 		}
