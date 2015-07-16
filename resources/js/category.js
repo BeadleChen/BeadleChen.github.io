@@ -4,6 +4,8 @@ $(document).ready(function(){
 		//默认 生活随笔
 		category = 'life';
 	}
+	//fill the index
+	$('.blog_index .current_category').html(category);
 	//获取category的json数据
 	$.ajax({
 		url:"../resources/json/category.json",
@@ -16,8 +18,8 @@ $(document).ready(function(){
 			var url = container.url;
 			for(var i=0;i<content.length;i++){
 				var title = content[i].title;
-				var value = content[i].value;
-				var contentHTML = "<li><a href='"+url+"#content="+value+"'>"+title+"</a></li>";
+				var article = content[i].article;
+				var contentHTML = "<li><a href='"+url+"#article="+article+"'>"+title+"</a></li>";
 				$('.body_content .panel-body ul').append(contentHTML);
 			}
 		}

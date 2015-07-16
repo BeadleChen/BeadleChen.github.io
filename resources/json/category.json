@@ -1,9 +1,10 @@
 {
 	"life":{
 		"title" : "生活随笔",
+		"url":"life.html",
 		"content":[
-			{"url":"content/math.html#content=set","title":"集合"},
-			{"url":"","title":"数学2"}
+			{"article":"life","title":"生活小记","date":"2015-07-08"},
+			{"article":"","title":"未知的情绪"}
 		]
 	}
 	,
@@ -11,8 +12,8 @@
 		"title" : "数学之美",
 		"url":"math.html",
 		"content":[
-			{"value":"set","title":"集合"},
-			{"value":"","title":"数学2"}
+			{"article":"set","title":"集合","date":"2015-07-16"},
+			{"article":"math","title":"数学"}
 		]
 	}
 	,

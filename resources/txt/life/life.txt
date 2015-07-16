@@ -1,0 +1,15 @@
+<ul>
+	<li>2015-07-15:
+		今天在网上买了三本书，终于要重回书虫的时代了。三本书分别是
+		&lt;&lt;我与父辈&gt;&gt;、
+		&lt;&lt;我不是潘金莲&gt;&gt;、
+		&lt;&lt;别相信任何人&gt;&gt;
+	</li>
+	<li>2015-07-14:
+		sometimes things happened instantaneously so that you have no time 
+		to regret to do it! 
+	</li>
+	<li>2015-07-10:在写博客这方面还没什么经验，部分会抄袭别人的语句。不过我会保证在自己看过并理解了之后做出修改。</li>
+	<li>2015-07-09:暂时博客只是有个整体的框架。。。后期还要继续完善。</li>
+	<li>2015-07-08:终于拥有了自己的博客了，在这里真心要感谢好友赖神，还有提供平台的Github。</li>
+</ul>

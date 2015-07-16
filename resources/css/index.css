@@ -30,13 +30,13 @@
 	float:right;
 	color: #31708f;
 }
-/*Ö÷Ò³ ÓÒÉÏ ¸öÈË¼ò½é*/
+/*ï¿½ï¿½Ò³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ë¼ï¿½ï¿½*/
 .body_content .right_panel .panel-info{
 	width:100%;
 	height:200px;
 }
 
-/*Ö÷Ò³ ÓÒÏÂ ·ÖÀàÁÐ±í*/
+/*ï¿½ï¿½Ò³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½*/
 .body_content .right_panel .panel-success{
 	width:100%;
 	height:600px;
@@ -46,7 +46,6 @@
 	padding-left:20px;
 }
 .body_content .right_panel .panel-success ul li{
-	list-style: none;
 	text-decoration: underline;
 	margin-top: 5px;
 	color: #d6e9c6;

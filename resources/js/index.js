@@ -24,11 +24,11 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'json',
 		success:function(data){
-			for (var key in data)
-		    {
+			for (var key in data){
 		        var $category = $('.body_content .right_panel .panel-success .panel-body ul');
-		        var categoryLiHTML = "<li><span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span>" +
-		        		"<a href=content/category.html#category="+key+">"+data[key].title+"</a></li>"
+		        var categoryLiHTML = "<li>" +
+		        		"<a href=content/category.html#category="+key+">"+data[key].title+"</a>"+
+		        		"</li>";
 		        $category.append(categoryLiHTML);
 		    }
 		}
