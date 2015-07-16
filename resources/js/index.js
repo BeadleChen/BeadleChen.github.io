@@ -5,7 +5,6 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'text',
 		success:function(data){
-			alert(data);
 			var str = data.replace(/\r\n/g, "");
 			var da = eval('('+str+')');
 			//只取前6个
@@ -17,6 +16,7 @@ $(document).ready(function(){
 						"</h4>"+
 						"<p class='list-group-item-text'>"+da[i].description+"</p>";
 							"</a>";
+				alert(indexBlogHTML);
 				$('.body_content .list-group').append(indexBlogHTML);
 			}
 		}
