@@ -8,17 +8,16 @@ $(document).ready(function(){
 	$.ajax({
 		url:"../resources/json/category.json",
 		type:"GET",
-		dataType : 'text',
+		dataType : 'json',
 		success:function(data){
-			var str = data.replace(/\r\n/g, "");
-			var da = eval('('+str+')');
-			var container = eval('da.'+category);
+			var container = eval('data.'+category);
 			$('.body_content .panel-title').text(container.title);
 			var content = container.content;
+			var url = container.url;
 			for(var i=0;i<content.length;i++){
 				var title = content[i].title;
-				var url = content[i].url;
-				var contentHTML = "<li><a href='"+url+"'>"+title+"</a></li>";
+				var value = content[i].value;
+				var contentHTML = "<li><a href='"+url+"#content="+value+"'>"+title+"</a></li>";
 				$('.body_content .panel-body ul').append(contentHTML);
 			}
 		}

@@ -2,16 +2,17 @@
 	"life":{
 		"title" : "生活随笔",
 		"content":[
-			{"url":"","title":"数学1"},
+			{"url":"content/math.html#content=set","title":"集合"},
 			{"url":"","title":"数学2"}
 		]
 	}
 	,
 	"math":{
 		"title" : "数学之美",
+		"url":"math.html",
 		"content":[
-			{"url":"","title":"数学1"},
-			{"url":"","title":"数学2"}
+			{"value":"set","title":"集合"},
+			{"value":"","title":"数学2"}
 		]
 	}
 	,
