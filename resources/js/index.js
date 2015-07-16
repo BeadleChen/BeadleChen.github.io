@@ -27,12 +27,10 @@ $(document).ready(function(){
 			for (var key in data)
 		    {
 		        var $category = $('.body_content .right_panel .panel-success .panel-body ul');
-		        var categoryLiHTML = "<li><a href=content/category.html#category="+key+">"+data[key].title+"</a></li>"
+		        var categoryLiHTML = "<li><span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span>" +
+		        		"<a href=content/category.html#category="+key+">"+data[key].title+"</a></li>"
 		        $category.append(categoryLiHTML);
 		    }
-			//category li decorate
-			var categorySignHtml = "<span class=\"glyphicon glyphicon-play\" aria-hidden=\"true\"></span>";
-			$('.right_panel .panel-success .panel-body ul li').prepend(categorySignHtml);
 		}
 	});
 });
