@@ -8,17 +8,17 @@ $(document).ready(function(){
 			var str = data.replace(/\r\n/g, "");
 			var da = eval('('+str+')');
 			//只取前6个
-			for(var i=0;i < da.length && i < 6;i++){
-				var indexBlogHTML = "<a href='"+da[i].url+"' class='list-group-item'>"+
-						"<h4 class='list-group-item-heading'>"+
-							"<div class='head_title'>"+da[i].title+"</div>"+
-							"<div class='head_date'>日期:"+da[i].date+"</div>"+
-						"</h4>"+
-						"<p class='list-group-item-text'>"+da[i].description+"</p>";
-							"</a>";
-				alert(indexBlogHTML);
-				$('.body_content .list-group').append(indexBlogHTML);
-			}
+//			for(var i=0;i < da.length && i < 6;i++){
+//				var indexBlogHTML = "<a href='"+da[i].url+"' class='list-group-item'>"+
+//						"<h4 class='list-group-item-heading'>"+
+//							"<div class='head_title'>"+da[i].title+"</div>"+
+//							"<div class='head_date'>日期:"+da[i].date+"</div>"+
+//						"</h4>"+
+//						"<p class='list-group-item-text'>"+da[i].description+"</p>";
+//							"</a>";
+//				$('.body_content .list-group').append(indexBlogHTML);
+//			}
+			$('.body_content .list-group').append("123123");
 		}
 	});
 	//get data from category.json fill the index category
