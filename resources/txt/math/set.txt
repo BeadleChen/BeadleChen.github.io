@@ -1,4 +1,4 @@
-1.集合几个小概念
+1.集合几个小概念</br>
 通常用大写字母A,B,C,D...表示集合,小写字母a,b,c,d...表示集合中的元素.</br>
 元素与集合的关系:
 <img src="http://cdtyb.img45.wal8.com/img45/523173_20150716152722/143703234424.png" alt="set1" border="0" /></br>
@@ -13,4 +13,9 @@
 此外还有:
 <img src="http://cdtyb.img45.wal8.com/img45/523173_20150716152722/143703512216.png" alt="set5" border="0" /></br>
 集合与集合的关系:</br>
+<img src="http://cdtyb.img45.wal8.com/img45/523173_20150716152722/143703636526.png" alt="set6" border="0" /></br>
+2.集合的运算</br>
+基本运算有三种:交、并、差</br>
+I表示全集，所有集合都是I的子集</br>
+I-A则表示集合A的补集，记<img src="http://cdtyb.img45.wal8.com/img45/523173_20150716152722/143703693494.png" alt="set7" border="0" /></br>
 
