@@ -4,12 +4,15 @@ $(document).ready(function(){
 		//默认 生活随笔
 		category = 'life';
 	}
+	//获取category的json数据
 	$.ajax({
-		url:"../resources/json/category.js",
+		url:"../resources/json/category.json",
 		type:"GET",
-		dataType : 'json',
+		dataType : 'text',
 		success:function(data){
-			var container = eval('data.'+category);
+			var str = data.replace(/\r\n/g, "");
+			var da = eval('('+str+')');
+			var container = eval('da.'+category);
 			$('.body_content .panel-title').text(container.title);
 			var content = container.content;
 			for(var i=0;i<content.length;i++){
