@@ -5,9 +5,9 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'text',
 		success:function(data){
+			alert(data);
 			var str = data.replace(/\r\n/g, "");
 			var da = eval('('+str+')');
-			alert(JSON.stringify(da));
 			//只取前6个
 //			for(var i=0;i < da.length && i < 6;i++){
 //				var indexBlogHTML = "<a href='"+da[i].url+"' class='list-group-item'>"+
