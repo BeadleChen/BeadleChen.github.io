@@ -5,7 +5,7 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'text',
 		success:function(data){
-			var str = data.replace(/\r\n/g, "");
+			var str = data.replace(new RegExp("\r\n","gm"),"");
 			alert(str);
 			var da = eval('('+str+')');
 			//只取前6个
