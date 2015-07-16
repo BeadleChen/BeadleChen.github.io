@@ -5,8 +5,8 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'text',
 		success:function(data){
-			alert(data);
 			var str = data.replace(/\r\n/g, "");
+			alert(str);
 			var da = eval('('+str+')');
 			//只取前6个
 //			for(var i=0;i < da.length && i < 6;i++){
