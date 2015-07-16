@@ -26,6 +26,7 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'text',
 		success:function(data){
+			alert(data);
 			var str = data.replace(/\r\n/g, "");
 			var da = eval('('+str+')');
 			for (var key in da)
