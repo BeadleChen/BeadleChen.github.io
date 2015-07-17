@@ -11,6 +11,7 @@ body{
 	z-index:9999;
 	position:fixed;
 	top: 0px;
+	background-color: #f5f5d5;
 	border-bottom: 2px solid #d3d3d3;
 }
 .head .blog_title{
@@ -26,7 +27,7 @@ body{
 .body_content{
 	min-height: 500px;
 	width: 920px;
-	margin: 60px auto;/*ºÍheadÏà¾àÒ»¶¨¸ß¶È*/
+	margin: 60px auto;/*ï¿½ï¿½headï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß¶ï¿½*/
 }
 
 

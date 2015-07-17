@@ -26,7 +26,7 @@
 	"software":{
 		"title" : "计算机软件",
 		"content":[
-			{"article":"encode","title":"计算机编码世界"},
+			{"article":"encode","title":"计算机编码世界","date":"2015-07-10"},
 			{"article":"","title":"数学2"}
 		]
 	}
