@@ -47,12 +47,23 @@ ISO-8859-1
 = ISO 8859-1 + ASCII + ISO/IEC 6429
 = ISO/IEC 8859-1 + ASCII + ISO/IEC 6429</br>
 <label>2.5 Unicode(重点)</label></br>
-<span>(摘自:阮一峰博客)</span></br>
 Unicode包含了全世界的所有字符，大概有100多万个符号.</br>
-Unicode是一个字符集，它规定了字符的二进制代码。</br>
-UTF-8就是在互联网上使用最广的一种Unicode的实现方式。</br>
-其他实现方式还包括UTF-16（字符用两个字节或四个字节表示）和UTF-32（字符用四个字节表示）</br>
-，不过在互联网上基本不用。重复一遍，这里的关系是，UTF-8是Unicode的实现方式之一。</br>
+Unicode是一个字符集，它只规定了字符的二进制代码。</br>
+UCS是Unicode的一个简称,早期Unicode都是用2个字节16位来表示字符.</br>
+但只能表示65536个字符,但后来随着字符的增多..用4个字节32位表示(其实只有31位,最左边一位为0)</br>
+因此有了2个标准USC-2,USC-4.字面意思很清楚,4个字节向下兼容2个字节.</br>
+Unicode的实现有3个UTF-8,UTF-16,UTF-32.其中UTF-16就是我们所说的Unicode编码.也就是USC-2的实现</br>
+对于Unicode也就是UTF-16编码来说,例如'严'的汉字编码是4E25,如果在存储的时候是按照4E25的顺序存储,
+那也就是大头(Big endian)的方式,Unicode码还有小头(Little endian)的方式,按照254E的方式存储.
+Unicode编码是小头方式.
+因此使用Unicode的编码需要区分大头和小头,Unicode规范中推荐的标记字节顺序的方法是BOM.</br>
+在UCS编码中有一个叫做"ZERO WIDTH NO-BREAK SPACE"的字符，它的编码是FEFF。而FFFE在UCS中是不存在的字符，所以不应该出现在实际传输中。
+UCS规范建议我们在传输字节流前，先传输字符"ZERO WIDTH NO-BREAK SPACE"。
+这样如果接收者收到FEFF，就表明这个字节流是Big-Endian的；
+如果收到FFFE，就表明这个字节流是Little-Endian的。因此字符"ZERO WIDTH NO-BREAK SPACE"又被称作BOM。
+UTF-8不需要BOM来表明字节顺序，但可以用BOM来表明编码方式。字符"ZERO WIDTH NO-BREAK SPACE"的UTF-8编码是EF BB BF.</br>
+
+<label>2.6 UTF-8</label></br>
 UTF-8最大的一个特点，就是它是一种变长的编码方式。它可以使用1~4个字节表示一个符号，根据不同的符号而变化字节长度。</br>
 UTF-8的编码规则很简单，只有二条：</br>
 1）对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</br>
@@ -76,7 +87,5 @@ Unicode符号范围     | UTF-8编码方式</br>
 因此"严"的UTF-8编码需要三个字节，即格式是"1110xxxx 10xxxxxx 10xxxxxx"。
 然后，从"严"的最后一个二进制位开始，依次从后向前填入格式中的x，多出的位补0。
 这样就得到了，"严"的UTF-8编码是"11100100 10111000 10100101"，转换成十六进制就是E4B8A5。</br>
-<label>2.6 Unicode与UTF-8之间的转换</label></br>
-通过上一节的例子，可以看到"严"的Unicode码是4E25，UTF-8编码是E4B8A5，两者是不一样的。它们之间的转换可以通过程序实现。</br>
-在Windows平台下，有一个最简单的转化方法，就是使用内置的记事本小程序Notepad.exe。
-打开文件后，点击"文件"菜单中的"另存为"命令，会跳出一个对话框，在最底部有一个"编码"的下拉条。</br>
+由此可见,UTF-8可以表示21位的长度,至少可以表示200万左右的字符.
+</br>
