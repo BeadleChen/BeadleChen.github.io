@@ -11,3 +11,14 @@
 	margin-right: 20px;
 	margin-top: 20px;
 }
+.body_content .panel-body span{
+	color: red;
+}
+.body_content .panel-body .border_area{
+	width:100%;
+	border: 10px solid grey;
+	border-radius: 20px;
+	padding-top: 10px;
+	padding-left: 20px;
+	padding-bottom: 10px;
+}

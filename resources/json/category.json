@@ -1,7 +1,6 @@
 {
 	"life":{
 		"title" : "生活随笔",
-		"url":"life.html",
 		"content":[
 			{"article":"life","title":"生活小记","date":"2015-07-08"},
 			{"article":"","title":"未知的情绪"}
@@ -10,7 +9,6 @@
 	,
 	"math":{
 		"title" : "数学之美",
-		"url":"math.html",
 		"content":[
 			{"article":"set","title":"集合","date":"2015-07-16"},
 			{"article":"math","title":"数学"}
@@ -20,24 +18,24 @@
 	"hardware":{
 		"title" : "计算机硬件",
 		"content":[
-			{"url":"","title":"数学1"},
-			{"url":"","title":"数学2"}
+			{"article":"","title":"数学1"},
+			{"article":"","title":"数学2"}
 		]
 	}
 	,
 	"software":{
 		"title" : "计算机软件",
 		"content":[
-			{"url":"","title":"数学1"},
-			{"url":"","title":"数学2"}
+			{"article":"encode","title":"计算机编码世界"},
+			{"article":"","title":"数学2"}
 		]
 	}
 	,
 	"network":{
 		"title" : "计算机网络",
 		"content":[
-			{"url":"","title":"数学1"},
-			{"url":"","title":"数学2"}
+			{"article":"","title":"数学1"},
+			{"article":"","title":"数学2"}
 		]
 	}
 }

@@ -4,7 +4,7 @@ $(document).ready(function(){
 		//默认 life
 		article = 'life';
 	}
-	var category = getLastSuffix();
+	var category = getValueBySuffix('category');
 	if(checkValueIsEmpty(category)){
 		//默认 默认life
 		category = 'life';

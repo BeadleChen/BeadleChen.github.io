@@ -15,11 +15,11 @@ $(document).ready(function(){
 			var container = eval('data.'+category);
 			$('.body_content .panel-title').text(container.title);
 			var content = container.content;
-			var url = container.url;
 			for(var i=0;i<content.length;i++){
 				var title = content[i].title;
 				var article = content[i].article;
-				var contentHTML = "<li><a href='"+url+"#article="+article+"'>"+title+"</a></li>";
+				var url = 'blog.html#category='+category+'#article='+article;
+				var contentHTML = "<li><a href='"+url+"'>"+title+"</a></li>";
 				$('.body_content .panel-body ul').append(contentHTML);
 			}
 		}
