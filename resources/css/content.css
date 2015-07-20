@@ -16,6 +16,9 @@
 	 margin-top: 10px;
 	 margin-bottom: 10px;
 }
+.body_content .panel-body{
+	background-color: #FAFAF2;
+}
 .body_content .panel-body span{
 	color: red;
 }

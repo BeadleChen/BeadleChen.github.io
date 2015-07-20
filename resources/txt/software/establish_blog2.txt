@@ -1,0 +1,91 @@
+<p>
+这是博客订制的第二步,Git工具的简单使用.</br>
+</p>
+<label>(一)Git是什么</label></br>
+<p>
+Git是一个分布式的版本控制系统(SCM),开发中常见的还有SVN,CVS(已经很少使用).</br>
+而Github是Git的一个托管平台.OK解释完毕.
+</p>
+<label>(二)下载并安装Git</label></br>
+<p>
+URL:<a href="http://git-scm.com/download/" target="view_window">http://git-scm.com/download/</a></br>
+登录页面之后自己找windows下载,我暂时也只会windows</br>
+安装自己去搞定了。。。偷工减料了我
+</p>
+<label>(三)Git的一些设定</label></br>
+<p>
+安装好了之后，我就假设大家桌面已经有了Git Bash的快捷方式。</br>
+</p>
+<p>
+(以下操作都是个人习惯，大家看完根据喜好决定。)</br>
+(1)首先,在D盘创建一个Github文件夹。然后设置这个文件夹为github的默认仓库。</br>
+具体如下：
+在桌面Git图标右键属性，在起始位置中输入D:\Github设置完毕.</br>
+这个设定的意思是双击桌面Git图标之后默认的文件位置就是你设定的路径。</br>
+之后双击打开Git Bash
+</p>
+<p>
+(2)设定用户和Email.</br>
+这里的用户指的不是我们注册的用户，而是我们作为一个开发人员给自己起的一个名字。</br>
+用户可以随意。这里我取名叫Beadle.</br>
+<div class="border_area">
+--:git config --global user.name 'Beadle'</br>
+--:git config --global user.email '*@163.com'
+</div>
+</p>
+<p>
+(3)命令git clone，将远程代码拷贝到本地来。</br>
+(具体的操作，我在前面加两杆--)
+<div class="border_area">
+--:git clone https://github.com/[organization]/[repository]</br>
+</div>
+这里我解释一下organization,对于一个github账户,可以有多个组织,</br>
+当我们创建一个账号的时候，默认自动帮我们创建了一个以[username]为名的组织。</br>
+同时，我们可以自己创建组织，邀请开发伙伴，或者加入别人的组织。</br>
+所以这里的[organization]可以填我们的[username],[repository]就是我们建好的blog.</br>
+再多说两句,github的免费账号的代码必须是开源的。所以你拷贝的时候不需要认证身份,只有提交的时候需要.</br>
+</p>
+<p>
+(4)删除仓库的所有文件</br>
+一口气做下面这些操作之后，我再解释吧。</br>
+<div class="border_area">
+--:git rm -r *</br>
+--:git commit -a -m 'fir commit'</br>
+--:git push</br>
+--:输入用户名,密码</br>
+</div>
+是的就是这么任性，第一句话删除本地的所有文件.</br>
+第二句提交文件，这里的提交表示到git的本地库。而没有同步到远程库。</br>
+参数-a表示all changed files,正常情况只会提交修改和新增的文件，删除的文件变化不会提交。</br>
+-m表示messages，表示注释，此次提交内容的注释，方便查看。</br>
+git push表示同步到远程库，git pull表示从远程库同步到本地库。</br>
+</p>
+<p>
+(5)随心所欲吧....</br>
+在此之前我们先提交一个index.html作为博客的首页。</br>
+在blog文件夹下面创建一个index.html...里面随便扔点东西。</br>
+例如&lt;h1&gt;Hello Github!&lt;/h1&gt;.然后就是...</br>
+<div class="border_area">
+--:git add *</br>
+--:git commit -m 'update'</br>
+--:git push</br>
+--:用户名，密码</br>
+</div>
+看看吧，自己的成果</br>
+http://[organization].github.io/[repository]</br>
+现在整个项目就一个index.html,各位可以根据喜好加入自己的页面，</br>
+加入跳转，加入js，css。。随你们喜欢，私人订制。
+</p>
+<p>
+(6)此外，还有几个Git小操作</br>
+保存用户密码
+git config --global credential.helper 'store' </br>
+取消保存
+git config --global credential.helper '' </br>
+git branch 列出所有本地端的 branch。</br>
+git branch -r 列出所有远端的 branch。</br>
+git branch -a 列出所有本地及远端的 branch。</br>
+git branch "branch名称" 建立一个新的 branch。</br>
+git checkout -b "branch名称" 建立一个新的 branch 并切换到该 branch。</br>
+git push orgin "branch名称" 在远端创建新的branch</br>
+</p>

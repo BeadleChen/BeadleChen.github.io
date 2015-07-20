@@ -4,7 +4,7 @@
 </p>
 <label>(一)创建Github账号</label></br>
 <p>
-url:<a href="https://github.com/">https://github.com/</a>
+URL:<a href="https://github.com/" target="view_window">https://github.com/</a>
 </p>
 <label>(二)登录Github并创建repository</label></br>
 <p>
