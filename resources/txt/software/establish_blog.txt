@@ -1,0 +1,33 @@
+<p>
+这是博客订制的第一步,简单博客的建立.</br>
+(这里不做截图说明了，贴图实在是太累，有问题大家QQ私聊我)</br>
+</p>
+<label>(一)创建Github账号</label></br>
+<p>
+url:<a href="https://github.com/">https://github.com/</a>
+</p>
+<label>(二)登录Github并创建repository</label></br>
+<p>
+在登录了github之后，首先第一件要做的事就是绑定email地址.</br>
+这个十分重要,在github首页的右上角有个个人信息,下拉选项选择settings.</br>
+然后在左边有个Emails并带了警告的符号,这时首先需要绑定你的邮箱地址.(这里大家都会)</br>
+在绑定了邮箱之后,选择左边的repositories,并创建一个新的repository,
+这里我命名为blog.</br>
+</p>
+<label>(三)创建一个博客框架</label></br>
+<p>
+Github提供给我一个页面自动生成工具，让我们可以创建属于自己的页面。</br>
+我们选择刚刚创建好的blog库。点击最右边的Settings.</br>
+往下拉可以看到一个Github Pages.(Automatic Page Generator)</br>
+点击按钮Launch Automatic Page Generator.</br>
+既然是自动的什么也不用选,下拉到最底部,选择Continue To Layouts.(下一步到布局)</br>
+同样,随便选择一个.这里我们不需要用Github提供给我们的模板，我喜欢私人订制.</br>
+选择Publish Page.这样我们就完成了页面框架的设置了,但我们并不使用它.</br>
+经过了这么几分钟的努力，终于有了点惊喜。
+这时我们可以访问http://[userName].github.io/blog/</br>
+<span>注:</span></br>
+userName:为注册时的用户名</br>
+blog:是我们的repository的名称</br>
+还有一种博客的url可以是http://[userName].github.io但这里我不想多说</br>
+大家可以网上找找资料。
+</p>

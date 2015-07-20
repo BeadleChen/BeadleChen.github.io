@@ -26,6 +26,7 @@
 	"software":{
 		"title" : "计算机软件",
 		"content":[
+			{"article":"establish_blog","title":"Github博客私人订制(一)","date":"2015-07-20"},
 			{"article":"encode","title":"计算机编码世界(一)","date":"2015-07-10"},
 			{"article":"encode2","title":"计算机编码世界(二)","date":"2015-07-17"}
 		]
