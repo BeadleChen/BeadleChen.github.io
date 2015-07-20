@@ -30,16 +30,18 @@
 	float:right;
 	color: #31708f;
 }
-/*��ҳ ���� ���˼��*/
 .body_content .right_panel .panel-info{
 	width:100%;
 	height:200px;
 }
+.body_content .right_panel .panel-warning{
+	width:100%;
+	height:100px;
+}
 
-/*��ҳ ���� �����б�*/
 .body_content .right_panel .panel-success{
 	width:100%;
-	height:600px;
+	height:475px;
 }
 .body_content .right_panel .panel-success ul{
 	margin:0;
