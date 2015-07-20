@@ -21,10 +21,14 @@ $(document).ready(function(){
 		dataType : 'json',
 		success:function(data){
 			var container = eval('data.'+ category);
-			$.each(container.content,function (){
+			$.each(container.content,function (i,v){
 				if(this.article == article ){
 					$('.body_content .head_title').html(this.title);
 					$('.body_content .head_date').html("日期:"+this.date);
+					var index = i + 1;
+					if(index != container.content.length ) {
+						container.content[i+1]
+					}
 				}
 			});
 		}
@@ -36,7 +40,7 @@ $(document).ready(function(){
 		type:"GET",
 		dataType : 'text',
 		success:function(data){
-			$('.body_content .panel-body').html(data);
+			$('.body_content .blog_content').html(data);
 		}
 	});
 });
