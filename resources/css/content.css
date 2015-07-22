@@ -33,3 +33,8 @@
 	margin-bottom: 10px;
 	background-color: #f5f5d5;
 }
+.body_content .panel-body .content_head{
+	text-align: center;
+	font-size: 25px;
+	font-weight: bold;
+}

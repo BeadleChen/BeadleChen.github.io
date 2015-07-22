@@ -1,0 +1,25 @@
+<div class="content_head">Web实际应用中的编码问题</div></br>
+<lavel>(1) JSP页面编码的介绍</label></br>
+---->>如果不做任何设置,页面默认ISO-8859-1编码(Western European)。</br>
+---->><%@ page contentType="text/html; charset=UTF-8" %></br>
+<p>
+等同于response.setContentType("text/html; charset=UTF-8");</br>
+</p>
+---->> <%@ page pageEncoding="UTF-8" %></br>
+<p>
+1.等同于告诉Eclipse我这个页面以什么编码方式存储</br>
+当然你可以修改jsp页面的编码方式,使其和pageEncoding不一样。</br>
+Eclipse的编码有一个默认方式,叫determine from content type</br>
+也就是说内容是怎么编的，我就怎么来。你要修改它也拿你没办法不是.</br>
+2.同时告诉Tomcat以什么方式读取这个JSP页面(这里大家有疑问，我问候再解释)</br>
+</p>
+---->>在<%@ page %>中如果没有contentType则根据pageEncoding产生contentType</br>
+<p>
+假设pageEncoding="UTF-8"则默认为response.setContentType("text/html;charset=utf-8")</br>
+假设pageEncoding="GBK"则默认为response.setContentType("text/html;charset=gbj")</br>
+</p>
+---->>在<%@ page %>中如果没有pageEncoding则根据contentType的charset来编码</br>
+<p>
+同样的如果没有pageEncoding则默认pageEncoding为contentType的charset.</br>
+这里pageEncoding起的作用是告诉Tomcat这个JSP文件以什么编码读取。</br>
+</p>
