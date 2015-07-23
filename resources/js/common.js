@@ -20,3 +20,42 @@ function checkValueIsEmpty(value){
 	}
 	return false;
 }
+
+function createXMLRequest() {
+	var request = null;
+	try {
+		request = new ActivexObject("Msxml2.XMLHTTP");
+	}
+	catch (e1) {
+		try {
+			request = new ActivexObject("Microsoft.XMLHTTP");
+		}
+		catch (e2) {
+			request = false;
+		}
+	}
+	if (!request && typeof XMLHttpRequest != 'undefined') {
+		request = new XMLHttpRequest();
+	}
+	return request;
+}
+
+function ajax(url,method,fnSucc,data){
+	var request = createXMLRequest();
+	//对特殊字符进行转义
+	//通过get方式发送request请求
+	//true该参数规定请求是否异步处理。
+	//True 表示脚本会在 send() 方法之后继续执行，而不等待来自服务器的响应。
+	request.open(method, url, true);
+	if(method.toLowerCase() == 'post'){
+		alert("123");
+		request.setRequestHeader("Content-Type"
+				, "application/x-www-form-urlencoded");
+	}
+	request.send(data);
+	request.onreadystatechange = function(){  //OnReadyStateChange事件
+        if(request.readyState == 4){  //4为完成
+            fnSucc(request.responseText); 
+        }
+    };
+}

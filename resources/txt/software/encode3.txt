@@ -3,7 +3,8 @@
 ---->>如果不做任何设置,页面默认ISO-8859-1编码(Western European)。</br>
 ---->><%@ page contentType="text/html; charset=UTF-8" %></br>
 <p>
-等同于response.setContentType("text/html; charset=UTF-8");</br>
+等同于response.setContentType("text/html; charset=UTF-8");
+这里对ContentType进行说明下</br>
 </p>
 ---->> <%@ page pageEncoding="UTF-8" %></br>
 <p>
@@ -22,4 +23,14 @@ Eclipse的编码有一个默认方式,叫determine from content type</br>
 <p>
 同样的如果没有pageEncoding则默认pageEncoding为contentType的charset.</br>
 这里pageEncoding起的作用是告诉Tomcat这个JSP文件以什么编码读取。</br>
+</p>
+
+---->>&lt;meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type" /&gt;</br>
+---->>&lt;meta charset="UTF-8" &gt; </br>
+<p>
+这两个是HTML标签。。如果response的header上没有ContentType，</br>
+则浏览器会以这两个的编码进行展示.但是，看下面。。。。</br>
+在JSP中 如果<%@ page %> 没有contentType和pageEncoding。</br>
+则默认response.setContentType("text/html")</br>
+这就意味着默认编码是ISO-8859-1所以JSP中meta的charset和contentType无效。</br>
 </p>

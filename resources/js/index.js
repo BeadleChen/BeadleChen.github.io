@@ -1,17 +1,15 @@
 $(document).ready(function(){
 	//get data from category.json fill the index category
-	$.ajax({
-		url:"resources/json/category.json",
-		type:"GET",
-		dataType : 'json',
-		success:function(data){
-			for (var key in data){
-		        var $category = $('.body_content .right_panel .panel-success .panel-body ul');
-		        var categoryLiHTML = "<li>" +
-		        		"<a href=content/category.html#category="+key+">"+data[key].title+"</a>"+
-		        		"</li>";
-		        $category.append(categoryLiHTML);
-		    }
+
+	ajax("resources/json/category.json","GET",function(data){
+		data = eval('('+data+')');
+		for (var key in data){
+		        var liNode = document.createElement("li");
+				var aNode = document.createElement("a");
+				aNode.href = "content/category.html#category="+key;
+				aNode.textContent = data[key].title;
+		        liNode.appendChild(aNode)
+				document.getElementById("category_id").appendChild(liNode);		 
 		}
 	});
 });
