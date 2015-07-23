@@ -48,7 +48,6 @@ function ajax(url,method,fnSucc,data){
 	//True 表示脚本会在 send() 方法之后继续执行，而不等待来自服务器的响应。
 	request.open(method, url, true);
 	if(method.toLowerCase() == 'post'){
-		alert("123");
 		request.setRequestHeader("Content-Type"
 				, "application/x-www-form-urlencoded");
 	}

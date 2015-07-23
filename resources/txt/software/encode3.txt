@@ -1,10 +1,14 @@
 <div class="content_head">Web实际应用中的编码问题</div></br>
-<lavel>(1) JSP页面编码的介绍</label></br>
+<lavel>(1) JSP页面有关编码的介绍</label></br>
 ---->>如果不做任何设置,页面默认ISO-8859-1编码(Western European)。</br>
 ---->><%@ page contentType="text/html; charset=UTF-8" %></br>
 <p>
 等同于response.setContentType("text/html; charset=UTF-8");
 这里对ContentType进行说明下</br>
+</p>
+<p>
+这里的ContentType是response的ContentType，意思就是告诉浏览器</br>
+我的数据是text/html,编码是UTF-8,因此浏览器会以UTF-8的编码进行展示。</br>
 </p>
 ---->> <%@ page pageEncoding="UTF-8" %></br>
 <p>
@@ -14,6 +18,7 @@ Eclipse的编码有一个默认方式,叫determine from content type</br>
 也就是说内容是怎么编的，我就怎么来。你要修改它也拿你没办法不是.</br>
 2.同时告诉Tomcat以什么方式读取这个JSP页面(这里大家有疑问，我问候再解释)</br>
 </p>
+<div class="border_area">
 ---->>在<%@ page %>中如果没有contentType则根据pageEncoding产生contentType</br>
 <p>
 假设pageEncoding="UTF-8"则默认为response.setContentType("text/html;charset=utf-8")</br>
@@ -24,6 +29,7 @@ Eclipse的编码有一个默认方式,叫determine from content type</br>
 同样的如果没有pageEncoding则默认pageEncoding为contentType的charset.</br>
 这里pageEncoding起的作用是告诉Tomcat这个JSP文件以什么编码读取。</br>
 </p>
+</div>
 
 ---->>&lt;meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type" /&gt;</br>
 ---->>&lt;meta charset="UTF-8" &gt; </br>
@@ -33,4 +39,80 @@ Eclipse的编码有一个默认方式,叫determine from content type</br>
 在JSP中 如果<%@ page %> 没有contentType和pageEncoding。</br>
 则默认response.setContentType("text/html")</br>
 这就意味着默认编码是ISO-8859-1所以JSP中meta的charset和contentType无效。</br>
+</p>
+---->>request.setCharacterEncoding("GBK");</br>
+<p>
+此方法是设置从浏览器端传过来数据的编码方式。</br>
+注意该方法只对POST的数据有效。</br>
+</p>
+---->>resp.setContentType("application/json;charset=ISO-8859-1");</br>
+<p>
+此处的编码对于浏览器的编码无影响，即如果用的是中文，charset=UTF-8或者GBK</br>
+对浏览器都不会产生乱码。只要不是在中文的情况下使用ISO就可以.</br>
+</p>
+---->>resp.setCharacterEncoding("GBK");</br>
+<p>
+这里的作用是设置返回给浏览器内容的编码方式，并可以设置页面的编码。</br>
+前提是该请求是进行页面的跳转，如果是ajax请求数据，数据的编码方式则跟</br>
+ajax请求发出的页面的编码方式相同。</br>
+</p>
+<p>
+默认情况下页面是以ISO编码，如果数据中存在中文则默认改为GB2312，如果</br>
+此时的编码方式为UTF-8，则会产生乱码。
+</p>
+<p>
+注意：在servlet中设置中文的编码和该servlet对应java文件保存的编码方式无关。
+</p>
+
+<lavel>(2) 数据从服务器到浏览器的传输</label></br>
+<p>
+这里我先做一个简单的架构。A代表浏览器，B代表服务器(Tomcat)。</br>
+B上面运行着许多Servlet.每一个Servelt可能编码不一样。</br>
+(这里Servlet的编码指的是Servlet的java文件在系统上的编码).</br>
+每个Servelt的编码其实不影响他在服务浏览器时对编码产生的影响。</br>
+这就好比两个不同编码的Servlet,当我们用文本打开时可以看到它们都拥有"中国"的字符</br>
+它们在硬盘上保存的二进制可能是不同的，当它们对"中国"以UTF-8进行编码时产生的字节码是一样的</br>
+</p>
+<p>
+在Tomcat看来JSP也是一个Servlet,例如我们有一个index.jsp则对应一个index_jsp.java。</br>
+这里我不对Tomcat的内部原理进行详解，大家只要知道index_jsp.java是一个Servlet即可。</br>
+</p>
+<div class="border_area">
+A请求B，B上的Servlet没有乱码，并且告诉A你应该以什么方式展示(ContentType)则没有乱码</br>
+乱码最容易出现的地方是当我们访问jsp的时候。大多数时候在index_jsp.java中已经是乱码了</br>
+还记得我说过<%@ page pageEncoding="UTF-8" %>的两个作用，其中第二个作用是告诉Tomcat</br>
+以什么方式读取jsp文件，也就是说pageEncoding的编码与实际index.jsp页面的编码一致时，</br>
+生成的index_jsp.java文件里就没有乱码。有兴趣大家去看Tomcat源码。</br>
+
+注:</br>contentType和pageEncoding的互相替代作用上面说过,不做解释了。</br>
+当contentType和pageEncoding都有时,contentType为utf-8,pageEncoding为gbk</br>
+并且index.jsp以gbk编码，也不会出现乱码.</br>
+</div>
+
+<lavel>(3) 数据从浏览器到服务器的传输</label></br>
+<p>
+数据从浏览器到服务器传输时，其编码方式以当前浏览器页面的编码方式相同。</br>
+即页面是UTF-8编码就是UTF-8，是GBK就是GBK。</br>
+在Serlvet中可以通过设置request.setCharacterEncoding("GBK");对数据进行解码。</br>
+但这种方式只对通过post方式上传的数据有效。</br>
+get方式的编码默认为ISO-8859-1。</br>
+get方式有两种情况：一种是在地址栏直接输入，另一种是页面url跳转。下面分情况讨论下</br>
+------>>页面url跳转方式:
+这里三种提供get方式乱码问题的解决办法：</br>
+1.在tomcat的server.xml中修改<Connector URIEncoding="UTF-8" port="8080" protocol="HTTP/1.1" redirectPort="8443"/></br>
+2.Serlvet中获取参数new String(request.getParameter("key").getBytes("ISO-8859-1"),"Encoding")</br>
+第二种方式在详细说明一下，在get方式发送请求时，首先字符按页面的编码方式进行，之后再按ISO-8859-1进行解码。</br>
+我们在servlet需要先把字节按ISO进行编码，然后按你页面的编码方式进行解码。这里的Encoding就是你页面的编码。</br>
+3.使用Tomcat8</br>
+首先不建议get方式传中文，如果需要使用第二种解决方式。</br>
+------>>地址栏直接输入:如果url带有中文则默认先UTF-8编码，再ISO-8859-1.</br>
+与页面的url不同的是 页面的get方式编码取决于页面编码,地址栏浏览器默认utf-8.</br>
+</p>
+
+<lavel>(4) 温馨提示</label></br>
+
+<p>
+如果大家看Tomcat源码，想了解jsp是如何形成index_jsp.java文件的。</br>
+建议大家看几个文件：Compile.java,Generator.java,PageInfo.java,ParserController.java</br>
+以上我说的编码亲测有效，如果有什么出入的地方，欢迎交流。
 </p>
