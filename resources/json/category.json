@@ -25,7 +25,8 @@
 	,
 	"software":{
 		"title" : "计算机软件",
-		"content":[			
+		"content":[		
+			{"article":"mysql_sql","title":"Mysql高级Sql查询","date":"2015-07-23"},
 			{"article":"establish_blog","title":"Github博客私人订制(一)","date":"2015-07-20"},
 			{"article":"establish_blog2","title":"Github博客私人订制(二)","date":"2015-07-20"},
 			{"article":"encode","title":"计算机编码世界(一)","date":"2015-07-10"},

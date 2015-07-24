@@ -1,0 +1,14 @@
+<p>
+前几天在工作中突然需要用到比较复杂的sql语句查询。</br>
+今天在自己的博客里做点总结.</br>
+</p>
+<p>
+SELECT</br>
+　　　　(CASE result</br>
+　　　　　　　　WHEN '合格'</br>
+　　　　　　　　THEN 'value'</br>
+　　　　END) as result</br>
+FROM</br>
+　　　　enterpriseDetection</br>
+对查询结果进行判断，如果是
+</p>    
