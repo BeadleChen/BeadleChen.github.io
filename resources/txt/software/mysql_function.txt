@@ -142,7 +142,7 @@ CURTIME()或CURRENT_TIME() 返回当前的时间</br>
 DATE_ADD(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
 如：SELECT DATE_ADD(CURRENT_DATE,INTERVAL 6 MONTH);</br>
 </p>
-DATE_FORMAT(date,fmt)  依照指定的fmt格式格式化日期date值</br>
+DATE_FORMAT(date,fmt)[TIME_FORMAT(time,format)]  依照指定的fmt格式格式化日期date值</br>
 </p>
 DATE_SUB(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
 如：SELECT DATE_SUB(CURRENT_DATE,INTERVAL 6 MONTH);</br>
@@ -158,6 +158,20 @@ MONTH(date)   返回date的月份值(1~12)</br>
 MONTHNAME(date)   返回date的月份名，如：SELECT MONTHNAME(CURRENT_DATE);</br>
 NOW()    返回当前的日期和时间</br>
 QUARTER(date)   返回date在一年中的季度(1~4)，如SELECT QUARTER(CURRENT_DATE);</br>
-WEEK(date)   返回日期date为一年中第几周(0~53)</br>
+WEEK(date)[WEEK(date,first)->WEEK(date,0),WEEK(date,1)]   返回日期date为一年中第几周(0~53)</br>
 YEAR(date)   返回日期date的年份(1000~9999)</br>
+HOUR(time)  返回time的小时，范围是0到23。</br>
+MINUTE(time)  返回time的分钟，范围是0到59。</br>
+SECOND(time)  回来time的秒数，范围是0到59。 </br>
+TO_DAYS(date)  给出一个日期date，返回一个天数(从0年的天数)。</br>
+FROM_DAYS(N)  给出一个天数N，返回一个DATE值。</br>
+</p>
+
+<h3>五、控制流函数</h3>
+<p>
+CASE WHEN[test1] THEN [result1]...ELSE [default] END如果testN是真，则返回resultN，否则返回default</br>
+CASE [test] WHEN[val1] THEN [result]...ELSE [default]END  如果test和valN相等，则返回resultN，否则返回default</br>
+IF(test,t,f)   如果test是真，返回t；否则返回f</br>
+IFNULL(arg1,arg2) 如果arg1不是空，返回arg1，否则返回arg2</br>
+NULLIF(arg1,arg2) 如果arg1=arg2返回NULL；否则返回arg1</br>
 </p>
