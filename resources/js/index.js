@@ -7,7 +7,7 @@ ajax("resources/json/category.json","GET",function(data){
 			var aNode = document.createElement("a");
 			aNode.href = "content/category.html#category="+key;
 			aNode.textContent = data[key].title;
-			liNode.appendChild(aNode)
+			liNode.appendChild(aNode);
 			document.getElementById("category_id").appendChild(liNode);		 
 	}
 });

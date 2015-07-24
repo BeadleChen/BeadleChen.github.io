@@ -7,8 +7,7 @@
 <!-- 通用css、js -->
 <link rel="shortcut icon" href="../resources/img/head_ico.png">
 <link rel="stylesheet" href="../resources/css/common.css"  />
-<link rel="stylesheet" href="../resources/bootstrap/css/bootstrap.min.css">
-<script type="text/javascript" src="../resources/js/jquery-1.11.3.js" ></script>
+<link rel="stylesheet" href="../resources/css/bootstrap.css" />
 <script type="text/javascript" src="../resources/js/common.js" ></script>
 <!-- category -->
 <script type="text/javascript" src="../resources/js/category.js" ></script>
@@ -22,17 +21,17 @@
 		<div class="blog_index">
 			<a href="http://beadlechen.github.io">Home Page</a> 
 			» Category
-			» <span class="current_category"></span>
+			» <span id="current_category"></span>
 		</div>
 	</div>
 	<div class="body_content">
 		<div class="panel panel-success">
 			<div class="panel-heading">
-				<h3 class="panel-title">
+				<h3 id="content_title" class="panel-title">
 				</h3>
 			</div>
 			<div class="panel-body">
-				<ul>
+				<ul id="content_ul">
 				</ul>
 			</div>
 		</div>

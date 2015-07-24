@@ -1,27 +1,27 @@
-$(document).ready(function(){
-	var category = getValueBySuffix('category');
-	if(checkValueIsEmpty(category)){
-		//默认 生活随笔
-		category = 'life';
+var category = getValueBySuffix('category');
+if(checkValueIsEmpty(category)){
+	//默认 生活随笔
+	category = 'life';
+}
+
+//获取category的json数据
+
+ajax("../resources/json/category.json","GET",function(data){
+	data = eval('('+data+')');
+	var container = eval('data.'+category);
+	document.getElementById('content_title').textContent=container.title;
+	var content = container.content;
+	for(var i=0;i<content.length;i++){
+		var title = content[i].title;
+		var article = content[i].article;
+		var url = 'blog.html#category='+category+'#article='+article;
+		var liNode = document.createElement("li");
+		var aNode = document.createElement("a");
+		aNode.href = url;
+		aNode.textContent = title;
+		liNode.appendChild(aNode);
+		document.getElementById('content_ul').appendChild(liNode);
 	}
 	//fill the index
-	$('.blog_index .current_category').html(category);
-	//获取category的json数据
-	$.ajax({
-		url:"../resources/json/category.json",
-		type:"GET",
-		dataType : 'json',
-		success:function(data){
-			var container = eval('data.'+category);
-			$('.body_content .panel-title').text(container.title);
-			var content = container.content;
-			for(var i=0;i<content.length;i++){
-				var title = content[i].title;
-				var article = content[i].article;
-				var url = 'blog.html#category='+category+'#article='+article;
-				var contentHTML = "<li><a href='"+url+"'>"+title+"</a></li>";
-				$('.body_content .panel-body ul').append(contentHTML);
-			}
-		}
-	});
+	document.getElementById('current_category').textContent=category;
 });

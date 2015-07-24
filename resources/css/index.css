@@ -4,6 +4,16 @@
 }
 .list-group .list-group-item{
 	padding: 0px;
+	position: relative;
+	display: block;
+	margin-bottom: -1px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	color: #333;
+}
+.list-group .list-group-item:first-child{
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
 }
 .list-group .list-group-item .list-group-item-heading{
 	height: 30px;
@@ -15,6 +25,7 @@
 .list-group .list-group-item .list-group-item-heading .head_title{
 	font-weight: bold;
 	float:left;
+	
 }
 .list-group .list-group-item .list-group-item-heading .head_date{
 	float:right;
@@ -23,6 +34,10 @@
 	height: 100px;
 	padding-top: 5px;
 	padding-left: 10px;
+}
+.body_content .list-group a:HOVER{
+	text-decoration: none;
+	background-color: #F5F5F5;
 }
 .body_content .right_panel{
 	width: 300px;
