@@ -15,16 +15,8 @@
 		]
 	}
 	,
-	"hardware":{
-		"title" : "计算机硬件",
-		"content":[
-			{"article":"","title":"数学1"},
-			{"article":"","title":"数学2"}
-		]
-	}
-	,
 	"software":{
-		"title" : "计算机软件",
+		"title" : "软件编程",
 		"content":[		
 			{"article":"mysql_sql","title":"Mysql高级Sql查询","date":"2015-07-23"},
 			{"article":"mysql_function","title":"Mysql常用函数汇总","date":"2015-07-24"},
@@ -34,14 +26,6 @@
 			{"article":"encode2","title":"计算机编码世界(二)","date":"2015-07-17"},
 			{"article":"encode3","title":"计算机编码世界(三)","date":"2015-07-21"}
 
-		]
-	}
-	,
-	"network":{
-		"title" : "计算机网络",
-		"content":[
-			{"article":"","title":"数学1"},
-			{"article":"","title":"数学2"}
 		]
 	}
 }
