@@ -39,7 +39,7 @@ MAX()/MIN()函数将返回与被传递的列同一数据类型的单一值。</b
 所以，与SUM( )函数一样，AVG()函数只能作用于数值型数据，即列column_name中的数据必须是数值型的。</br>
 </p>
 
-<label>1.4 合并函数-----GROUP_CONCAT()</label></br>
+<label>1.5 合并函数-----GROUP_CONCAT()</label></br>
 <p>
 GROUP_CONCAT可以对分组后的列进行字符串的合并(拼接)。</br>
 语法:</br>
