@@ -1,0 +1,163 @@
+<h3>一、 聚合函数</h3>
+<label>1.1 求和函数-----SUM()</label></br>
+<p>
+求和函数SUM( )用于对数据求和，返回选取结果集中所有值的总和。</br>
+语法:SELECT SUM(column_name) FROM table_name</br>
+说明：SUM()函数只能作用于数值型数据，即列column_name中的数据必须是数值型的。</br>
+</p>
+<label>1.2 计数函数-----COUNT()</label></br>
+<p>
+COUNT()函数用来计算表中记录的个数或者列中值的个数，计算内容由SELECT语句指定。</br>
+使用COUNT函数时，必须指定一个列的名称或者使用星号，星号表示计算一个表中的所有记录。</br>
+两种使用形式如下:</br>
+    COUNT(*)，计算表中行的总数，即使表中行的数据为NULL，也被计入在内。</br>
+    COUNT(column)，计算column列包含的行的数目，如果该列中某行数据为NULL，则该行不计入统计总数。</br>
+--使用COUNT(*)函数对表中的行数计数:</br>
+COUNT(*)函数将返回满足SELECT语句的WHERE子句中的搜索条件的函数。</br>
+--使用COUNT( )函数对一列中的数据计数:</br>
+COUNT( )函数可用于对一列中的数据值计数。</br>
+与忽略了所有列的COUNT(*)函数不同，COUNT( )函数逐一检查一列（或多列）中的值，并对那些值不是NULL的行计数。</br>
+--使用COUNT( )函数对多列中的数据计数:</br>
+COUNT( )函数不仅可用于对一列中的数据值计数，也可以对多列中的数据值计数。</br>
+如果对多列计数，则需要将要计数的多列通过连接符连接后，作为COUNT( )函数的参数。</br>
+</p>
+<label>1.3 最大/最小值函数—-----MAX()/MIN()</label></br>
+
+<p>
+当需要了解一列中的最大值时，可以使用MAX()函数；</br>
+同样，当需要了解一列中的最小值时，可以使用MIN()函数。语法如下。</br>
+SELECT MAX (column_name) / MIN (column_name) FROM  table_name</br>
+说明：列column_name中的数据可以是数值、字符串或是日期时间数据类型。</br>
+MAX()/MIN()函数将返回与被传递的列同一数据类型的单一值。</br>
+</p>
+
+<label>1.4 均值函数-----AVG()</label></br>
+<p>
+函数AVG()用于计算一列中数据值的平均值。</br>
+语法:SELECT  AVG (column_name) FROM table_name</br>
+说明：AVG()函数的执行过程实际上是将一列中的值加起来，再将其和除以非NULL值的数目。</br>
+所以，与SUM( )函数一样，AVG()函数只能作用于数值型数据，即列column_name中的数据必须是数值型的。</br>
+</p>
+
+<label>1.4 合并函数-----GROUP_CONCAT()</label></br>
+<p>
+GROUP_CONCAT可以对分组后的列进行字符串的合并(拼接)。</br>
+语法:</br>
+GROUP_CONCAT  (</br>
+　　　　　　　[DISTINCT] [,expr ...] [,col_name]</br>
+　　　　　　　[ ORDER BY {,col_name ...} [ASC | DESC] ] </br>
+　　　　　　　[SEPARATOR str_val]</br>
+　　　　　　　)</br>
+举例:表如下
+<div class="border_area">
+country|population|name</br>
+中国　　|1　　　　|a</br>
+美国　　|1　　　　|b</br>
+日本　　|5　　　　|a</br>
+欧洲　　|5　　　　|c</br>
+韩国　　|2　　　　|a</br>
+非洲　　|NULL　　|b</br>
+</div>
+(FROM table_name忽略)</br>
+--SELECT GROUP_CONCAT(population) GROUP BY name </br>
+(result:1,5,2|1|5)</br>
+--SELECT GROUP_CONCAT(population ORDER BY population) GROUP BY name</br> 
+(result:1,2,5|1|5)</br>
+--SELECT GROUP_CONCAT(population,'-',country) GROUP BY name </br>
+(result:1-中国,2-韩国,5-日本|1-美国|5-欧洲)</br>
+--SELECT GROUP_CONCAT(</br>
+　　　　　　　　(CASE country</br>
+　　　　　　　　　　　　WHEN '中国' THEN 'good'</br>
+　　　　　　　　　　　　ELSE 'bad'</br>
+　　　　　　　　　END)</br>
+　　　　　　　　,'-',population) GROUP BY name </br>
+(result:good-1,bad-2,bad-5|bad-1|bad-5)</br>
+--SELECT GROUP_CONCAT(population,SEPARATOR '-') GROUP BY name </br>
+(result:1-5-2|1|5)</br>
+</p>
+
+<label>1.6 聚合分析的重值处理</label></br>
+<p>
+前面介绍的5种聚合函数，可以作用于所选列中的所有数据（不管列中的数据是否有重置），</br>
+也可以只对列中的非重值进行处理，即把重复的值只取一次进行聚合分析。</br>
+当然，对于MAX()/MIN()函数来讲，重值处理意义不大。</br>
+可以使用ALL关键字指明对所选列中的所有数据进行处理，</br>
+使用DISTINCT关键字指明对所选列中的非重值数据进行处理。</br>
+以AVG()函数为例，语法如下。</br>
+SELECT  AVG ([ALL/DISTINCT] column_name) FROM table_name</br>
+说明：[ALL/DISTINCT]在缺省状态下，默认是ALL关键字，</br>
+即不管是否有重值，处理所有数据。其他聚合函数的用法与此相同。</br>
+</p>
+
+
+
+<h3>二、 数学函数</h3>
+<p>
+ABS(x)   返回x的绝对值</br>
+BIN(x)   返回x的二进制（OCT返回八进制，HEX返回十六进制）</br>
+CEILING(x)   返回大于x的最小整数值</br>
+EXP(x)   返回值e（自然对数的底）的x次方</br>
+FLOOR(x)   返回小于x的最大整数值</br>
+GREATEST(x1,x2,...,xn)返回集合中最大的值</br>
+LEAST(x1,x2,...,xn)      返回集合中最小的值</br>
+LN(x)                    返回x的自然对数</br>
+LOG(x,y)返回x的以y为底的对数</br>
+MOD(x,y)                 返回x/y的模（余数）</br>
+PI()返回pi的值（圆周率）</br>
+RAND()返回０到１内的随机值,可以通过提供一个参数(种子)使RAND()随机数生成器生成一个指定的值。</br>
+ROUND(x,y)返回参数x的四舍五入的有y位小数的值</br>
+SIGN(x) 返回代表数字x的符号的值</br>
+SQRT(x) 返回一个数的平方根</br>
+TRUNCATE(x,y)            返回数字x截短为y位小数的结果</br>
+</p>
+
+<h3>三、 字符串函数</h3>
+<p>
+ASCII(char)返回字符的ASCII码值</br>
+BIT_LENGTH(str)返回字符串的比特长度</br>
+CONCAT(s1,s2...,sn)将s1,s2...,sn连接成字符串</br>
+CONCAT_WS(sep,s1,s2...,sn)将s1,s2...,sn连接成字符串，并用sep字符间隔</br>
+INSERT(str,x,y,instr) 将字符串str从第x位置开始，y个字符长的子串替换为字符串instr，返回结果</br>
+FIND_IN_SET(str,list)分析逗号分隔的list列表，如果发现str，返回str在list中的位置</br>
+LCASE(str)或LOWER(str) 返回将字符串str中所有字符改变为小写后的结果</br>
+LEFT(str,x)返回字符串str中最左边的x个字符</br>
+LENGTH(s)返回字符串str中的字符数</br>
+LTRIM(str) 从字符串str中切掉开头的空格</br>
+POSITION(substr,str) 返回子串substr在字符串str中第一次出现的位置</br>
+QUOTE(str) 用反斜杠转义str中的单引号</br>
+REPEAT(str,srchstr,rplcstr)返回字符串str重复x次的结果</br>
+REVERSE(str) 返回颠倒字符串str的结果</br>
+RIGHT(str,x) 返回字符串str中最右边的x个字符</br>
+RTRIM(str) 返回字符串str尾部的空格</br>
+STRCMP(s1,s2)比较字符串s1和s2</br>
+TRIM(str)去除字符串首部和尾部的所有空格</br>
+UCASE(str)或UPPER(str) 返回将字符串str中所有字符转变为大写后的结果</br>
+
+
+<h3>四、日期和时间函数</h3>
+<p>
+CURDATE()或CURRENT_DATE() 返回当前的日期</br>
+CURTIME()或CURRENT_TIME() 返回当前的时间</br>
+</p>
+DATE_ADD(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
+如：SELECT DATE_ADD(CURRENT_DATE,INTERVAL 6 MONTH);</br>
+</p>
+DATE_FORMAT(date,fmt)  依照指定的fmt格式格式化日期date值</br>
+</p>
+DATE_SUB(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
+如：SELECT DATE_SUB(CURRENT_DATE,INTERVAL 6 MONTH);</br>
+</p>
+DAYOFWEEK(date)   返回date所代表的一星期中的第几天(1~7)</br>
+DAYOFMONTH(date)  返回date是一个月的第几天(1~31)</br>
+DAYOFYEAR(date)   返回date是一年的第几天(1~366)</br>
+DAYNAME(date)   返回date的星期名，如：SELECT DAYNAME(CURRENT_DATE);</br>
+FROM_UNIXTIME(ts,fmt)  根据指定的fmt格式，格式化UNIX时间戳ts</br>
+HOUR(time)   返回time的小时值(0~23)</br>
+MINUTE(time)   返回time的分钟值(0~59)</br>
+MONTH(date)   返回date的月份值(1~12)</br>
+MONTHNAME(date)   返回date的月份名，如：SELECT MONTHNAME(CURRENT_DATE);</br>
+NOW()    返回当前的日期和时间</br>
+QUARTER(date)   返回date在一年中的季度(1~4)，如SELECT QUARTER(CURRENT_DATE);</br>
+WEEK(date)   返回日期date为一年中第几周(0~53)</br>
+YEAR(date)   返回日期date的年份(1000~9999)</br>
+</p>

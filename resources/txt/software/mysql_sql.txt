@@ -2,13 +2,33 @@
 前几天在工作中突然需要用到比较复杂的sql语句查询。</br>
 今天在自己的博客里做点总结.</br>
 </p>
+<h3>一、 CASE语句的使用</h3>
 <p>
-SELECT</br>
-　　　　(CASE result</br>
-　　　　　　　　WHEN '合格'</br>
-　　　　　　　　THEN 'value'</br>
-　　　　END) as result</br>
-FROM</br>
-　　　　enterpriseDetection</br>
-对查询结果进行判断，如果是
-</p>    
+<label>1.1 CASE介绍</label></br> 
+ Case具有两种格式。简单Case函数和Case搜索函数。</br>
+--简单Case函数</br>
+<div class="border_area">
+　　CASE  sex</br>
+　　　　WHEN '1' THEN '男'</br>
+　　　　WHEN '2' THEN '女'</br>
+　　ELSE '其他' END</br>
+</div>
+--Case搜索函数</br>
+<div class="border_area">
+　　CASE WHEN sex = '1' THEN '男'</br>
+　　　　WHEN sex = '2' THEN '女'</br>
+　　ELSE '其他' END</br>
+</div>
+这两种方式，可以实现相同的功能。简单Case函数的写法相对比较简洁，但是和Case搜索函数相比，</br>
+功能方面会有些限制，比如写判断式。 </br>
+还有一个需要注意的问题，Case函数只返回第一个符合条件的值，剩下的Case部分将会被自动忽略。 </br>
+--比如说，下面这段SQL，你永远无法得到“第二类”这个结果</br>
+<div class="border_area">
+　　CASE WHEN col_1 IN ( 'a', 'b') THEN '第一类'</br>
+　　　　WHEN col_1 IN ('a')       THEN '第二类'</br>
+　　ELSE'其他' END</br>
+</div>
+</p>
+
+<label>1.2 CASE用法</label></br>
+--作为查询结果的判断
