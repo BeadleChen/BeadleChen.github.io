@@ -135,37 +135,193 @@ UCASE(str)或UPPER(str) 返回将字符串str中所有字符转变为大写后�
 
 
 <h3>四、日期和时间函数</h3>
+
+<label>4.1 获取当前系统时间</label></br>
 <p>
-CURDATE()或CURRENT_DATE() 返回当前的日期,例如'2015-07-27'</br>
-CURTIME()或CURRENT_TIME() 返回当前的时间,例如'09:36:23'</br>
-NOW()或CURRENT_TIMESTAMP() 返回当前日期时间,例如'2015-07-27 09:37:11'</br>
+--CURDATE()或CURRENT_DATE() 返回当前的日期,例如'2015-07-27'</br>
+--CURTIME()或CURRENT_TIME() 返回当前的时间,例如'09:36:23'</br>
+--NOW()或CURRENT_TIMESTAMP()或SYSDATE() 返回当前日期时间,例如'2015-07-27 09:37:11'</br>
+
 </p>
-DATE_ADD(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
-如：SELECT DATE_ADD(CURRENT_DATE,INTERVAL 6 MONTH);</br>
+<p>
+--UNIX_TIMESTAMP(date)</br>
+如果没有参数调用，返回一个Unix时间戳记(从'1970-01-01 00:00:00'GMT开始的秒数)。</br>
+如果UNIX_TIMESTAMP()用一个date参数被调用，它返回从'1970-01-01 00:00:00' GMT开始的秒数值。</br>
+date可以是一个DATE字符串、一个DATETIME字符串、一个TIMESTAMP或以YYMMDD或YYYYMMDD格式的本地时间的一个数字。</br>
+例子:SELECT UNIX_TIMESTAMP();//结果1437965279 </br>  
+例子:SELECT UNIX_TIMESTAMP('1997-10-04 22:23:00'); //结果875996580  </br>  
+--FROM_UNIXTIME(unix_timestamp)  </br>  
+以'YYYY-MM-DD HH:MM:SS'或YYYYMMDDHHMMSS格式返回unix_timestamp参数所表示的值，</br>  
+取决于函数是在一个字符串还是或数字上下文中被使用。  </br>  
+例子:SELECT FROM_UNIXTIME(875996580);//'1997-10-04 22:23:00' </br>   
+例子:select FROM_UNIXTIME(875996580) + 0;//19971004222300</br>  
+--FROM_UNIXTIME(unix_timestamp,format)  </br>
+返回表示 Unix 时间标记的一个字符串，根据format字符串格式化。</br>
+format可以包含与DATE_FORMAT()函数列出的条目同样的修饰符。具体参考下面format表. </br>
+例子:SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s');//'2015 27th July 10:53:29' 
 </p>
-DATE_FORMAT(date,fmt)[TIME_FORMAT(time,format)]  依照指定的fmt格式格式化日期date值</br>
+<p>
+--SEC_TO_TIME(seconds)  </br>
+返回seconds参数，变换成小时、分钟和秒，值以'HH:MM:SS'或HHMMSS格式化，</br>
+取决于函数是在一个字符串还是在数字上下文中被使用。  </br>
+例子:SELECT SEC_TO_TIME(2378);//'00:39:38'  </br>
+例子:SELECT SEC_TO_TIME(2378) + 0; //3938</br> 
+--TIME_TO_SEC(time)  </br>
+返回time参数，转换成秒。  </br>
+例子:SELECT TIME_TO_SEC('22:23:00');//80580v </br> 
+例子:SELECT TIME_TO_SEC('00:39:38'); //2378 </br> 
 </p>
-DATE_SUB(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
-如：SELECT DATE_SUB(CURRENT_DATE,INTERVAL 6 MONTH);</br>
+
+<label>4.2 日期的时间间隔函数</label></br>
+
+<p>
+<label>(4.2.1) 增加(减少)几年几月几天几时几分几秒</label></br>
+--ADDDATE或DATE_ADD(date,INTERVAL expr type)</br>
+--SUBDATE或DATE_SUB(date,INTERVAL expr type)</br>
+--EXTRACT(type FROM date)函数从日期中返回“type”间隔</br>
+expr是指定加到开始日期或从开始日期减去的间隔值一个表达式，expr是一个字符串；</br>
+它可以以一个“-”开始表示负间隔。type是一个关键词，指明表达式应该如何被解释。</br>
+<div class="border_area">
+SECOND 秒 SECONDS  </br>
+MINUTE 分钟 MINUTES  </br>
+HOUR 时间 HOURS  </br>
+DAY 天 DAYS  </br>
+MONTH 月 MONTHS  </br>
+YEAR 年 YEARS  </br>
+MINUTE_SECOND 分钟和秒 "MINUTES:SECONDS"  </br>
+HOUR_MINUTE 小时和分钟 "HOURS:MINUTES"  </br>
+DAY_HOUR 天和小时 "DAYS HOURS"  </br>
+YEAR_MONTH 年和月 "YEARS-MONTHS"  </br>
+HOUR_SECOND 小时, 分钟， "HOURS:MINUTES:SECONDS"  </br>
+DAY_MINUTE 天, 小时, 分钟 "DAYS HOURS:MINUTES"  </br>
+DAY_SECOND 天, 小时, 分钟, 秒 "DAYS HOURS:MINUTES:SECONDS"</br>
+</div>
+举例:</br>
+(1)SELECT DATE_ADD(NOW(),INTERVAL 60 SECOND);//间隔60秒</br>
+(2)SELECT DATE_ADD(NOW(),INTERVAL "2:20" MINUTE_SECOND);//间隔2分钟60秒</br>
+(3)SELECT DATE_SUB("1998-01-01 00:00:00",INTERVAL "-1 1 1" DAY_SECOND);</br>
+//间隔一小时一分一秒,天数为空 默认取0.expr前可加"-"</br>
+(4)SELECT EXTRACT(HOUR_SECOND FROM NOW());//结果102111,表示10点21分11秒.</br>
+</br>
 </p>
-DAYOFWEEK(date)   返回date所代表的一星期中的第几天(1~7)</br>
-DAYOFMONTH(date)  返回date是一个月的第几天(1~31)</br>
-DAYOFYEAR(date)   返回date是一年的第几天(1~366)</br>
-DAYNAME(date)   返回date的星期名，如：SELECT DAYNAME(CURRENT_DATE);</br>
-FROM_UNIXTIME(ts,fmt)  根据指定的fmt格式，格式化UNIX时间戳ts</br>
-HOUR(time)   返回time的小时值(0~23)</br>
-MINUTE(time)   返回time的分钟值(0~59)</br>
-MONTH(date)   返回date的月份值(1~12)</br>
-MONTHNAME(date)   返回date的月份名，如：SELECT MONTHNAME(CURRENT_DATE);</br>
-NOW()    返回当前的日期和时间</br>
-QUARTER(date)   返回date在一年中的季度(1~4)，如SELECT QUARTER(CURRENT_DATE);</br>
-WEEK(date)[WEEK(date,first)->WEEK(date,0),WEEK(date,1)]   返回日期date为一年中第几周(0~53)</br>
-YEAR(date)   返回日期date的年份(1000~9999)</br>
-HOUR(time)  返回time的小时，范围是0到23。</br>
-MINUTE(time)  返回time的分钟，范围是0到59。</br>
-SECOND(time)  回来time的秒数，范围是0到59。 </br>
-TO_DAYS(date)  给出一个日期date，返回一个天数(从0年的天数)。</br>
-FROM_DAYS(N)  给出一个天数N，返回一个DATE值。</br>
+<p>
+--PERIOD_ADD(P,N)  </br>
+增加N个月到阶段P（以格式YYMM或YYYYMM)。以格式YYYYMM返回值。注意阶段参数P不是日期值。</br>  
+例子:SELECT PERIOD_ADD(9801,2);//结果199803 </br>
+--PERIOD_DIFF(P1,P2)  </br>
+返回在时期P1和P2之间月数，P1和P2应该以格式YYMM或YYYYMM。注意，时期参数P1和P2不是日期值。</br>
+例子:SELECT PERIOD_DIFF(9802,199703);//结果11</br> 
+</p>
+
+<p>
+<label>(4.2.2) 日期转换</label></br>
+--TO_DAYS(date)  
+给出一个日期date，返回一个天数(从0年的天数)。</br> 
+例子:SELECT TO_DAYS(950501);//结果728779  </br> 
+例子:SELECT TO_DAYS('1997-10-07'); //结果729669 </br>
+--FROM_DAYS(N)  </br>
+给出一个天数N，返回一个DATE值。</br>
+例子:SELECT FROM_DAYS(366);//结果0001-01-01  </br> 
+</p>
+
+<label>4.3 日期格式化(转换)</label></br>
+<p>
+--DATE_FORMAT(date,fmt)  依照指定的fmt格式格式化日期date值.</br>
+--TIME_FORMAT(time,format)处理包含小时、分钟和秒的那些格式修饰符。其他修饰符产生一个NULL值或0。</br>
+<div class="border_area">
+　　%M 月名字(January……December)  </br>
+　　%W 星期名字(Sunday……Saturday)  </br>
+　　%D 有英语前缀的月份的日期(1st, 2nd, 3rd, 等等。）</br>  
+　　%Y 年, 数字, 4 位  </br>
+　　%y 年, 数字, 2 位  </br>
+　　%a 缩写的星期名字(Sun……Sat)  </br>
+　　%d 月份中的天数, 数字(00……31)  </br>
+　　%e 月份中的天数, 数字(0……31)  </br>
+　　%m 月, 数字(01……12)  </br>
+　　%c 月, 数字(1……12)  </br>
+　　%b 缩写的月份名字(Jan……Dec)  </br>
+　　%j 一年中的天数(001……366)  </br>
+　　%H 小时(00……23)  </br>
+　　%k 小时(0……23)  </br>
+　　%h 小时(01……12)  </br>
+　　%I 小时(01……12)  </br>
+　　%l 小时(1……12)  </br>
+　　%i 分钟, 数字(00……59)  </br>
+　　%r 时间,12 小时(hh:mm:ss [AP]M)  </br>
+　　%T 时间,24 小时(hh:mm:ss)  </br>
+　　%S 秒(00……59)  </br>
+　　%s 秒(00……59)  </br>
+　　%p AM或PM  </br>
+　　%w 一个星期中的天数(0=Sunday ……6=Saturday ）  </br>
+　　%U 星期(0……52), 这里星期天是星期的第一天  </br>
+　　%u 星期(0……52), 这里星期一是星期的第一天  </br>
+　　%% 一个文字“%”。 </br>
+</div>
+</p>
+
+<label>4.4 提取日期</label></br>
+<p>
+--DAYOFYEAR(date)   返回date是一年的第几天(1~366)</br>
+例子:SELECT DAYOFYEAR('2015-07-27');//208</br>
+</p>
+<p>
+--DAYOFMONTH(date)或DAY()  返回date是一个月的第几天(1~31)</br>
+例子:SELECT DAYOFMONTH('2015-07-27');//27</br>
+</p>
+<p>
+--DAYOFWEEK(date)   返回date所代表的一星期中的第几天(1~7)</br>
+例子:SELECT DAYOFWEEK('2015-07-27');//2星期一为第二天.</br>
+</p>
+<p>
+--WEEKDAY(date)  返回date的星期索引(0=星期一，1=星期二, ……6= 星期天)。</br>
+例子:SELECT WEEKDAY('2015-07-27 10:09:08');//0表示星期一</br>
+</p>
+<p>
+--DAYNAME(date)   返回date的星期名.</br>
+例子:SELECT DAYNAME('2015-07-27 10:09:08');//Monday</br>
+</p>
+<p>
+--MONTHNAME(date)   返回date的月份名.</br>
+例子:SELECT MONTHNAME('2015-07-27 10:09:08');//July</br>
+</p>
+<p>
+--LAST_DAY(date )</br>
+函数使用说明：获取一个日期或日期时间值，返回该月最后一天对应的值。</br>
+若参数无效，则返回 NULL 。</br>
+例子:SELECT LAST_DAY('2015-02-1 10:09:08');//2015-02-28 </br>
+</p>
+<p>
+--YEAR(date)   返回日期date的年份(1000~9999)</br>
+例子:SELECT YEAR('2015-07-27 10:09:08');//2015</br>
+</p>
+<p>
+--QUARTER(date)   返回date在一年中的季度(1~4)</br>
+例子:SELECT QUARTER('2015-07-27 10:09:08');//3</br>
+</p>
+<p>
+--MONTH(date)   返回date的月份值(1~12)</br>
+例子:SELECT MONTH('2015-07-27 10:09:08');//7</br>
+</p>
+<p>
+--WEEK(date)  返回日期date为一年中第几周(0~52)</br>
+例子:SELECT WEEK('2015-07-27 10:09:08');//30</br>
+--WEEK(date,first)  </br>
+对于星期天是一周的第一天的地方，有一个单个参数，返回date的周数，</br>
+范围在0到52。2个参数形式WEEK()允许你指定星期是否开始于星期天或星期一。</br>
+如果第二个参数是0，星期从星期天开始，如果第二个参数是1，从星期一开始。</br>
+例子:SELECT WEEK('2015-07-27 10:09:08',1);//31</br>
+</p>
+<p>
+--HOUR(time)   返回time的小时值(0~23)</br>
+例子:SELECT HOUR('2015-07-27 10:09:08');//10</br>
+</p>
+<p>
+--MINUTE(time)   返回time的分钟值(0~59)</br>
+例子:SELECT MINUTE('2015-07-27 10:09:08');//9</br>
+</p>
+<p>
+--SECOND(time)  返回time的秒数，范围是0到59。 </br>
+例子:SELECT SECOND('2015-07-27 10:09:08');//8</br>
 </p>
 
 <h3>五、控制流函数</h3>
