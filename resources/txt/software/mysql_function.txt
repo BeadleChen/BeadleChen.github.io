@@ -136,8 +136,9 @@ UCASE(str)或UPPER(str) 返回将字符串str中所有字符转变为大写后�
 
 <h3>四、日期和时间函数</h3>
 <p>
-CURDATE()或CURRENT_DATE() 返回当前的日期</br>
-CURTIME()或CURRENT_TIME() 返回当前的时间</br>
+CURDATE()或CURRENT_DATE() 返回当前的日期,例如'2015-07-27'</br>
+CURTIME()或CURRENT_TIME() 返回当前的时间,例如'09:36:23'</br>
+NOW()或CURRENT_TIMESTAMP() 返回当前日期时间,例如'2015-07-27 09:37:11'</br>
 </p>
 DATE_ADD(date,INTERVAL int keyword)返回日期date加上间隔时间int的结果(int必须按照关键字进行格式化),</br>
 如：SELECT DATE_ADD(CURRENT_DATE,INTERVAL 6 MONTH);</br>

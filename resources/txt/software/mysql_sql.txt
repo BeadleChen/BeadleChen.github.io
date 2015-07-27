@@ -32,3 +32,5 @@
 
 <label>1.2 CASE用法</label></br>
 --作为查询结果的判断
+CASE可作为类似switch的语句对查询结果进行判断,做出相应的输出。
+可这样使用CASE WHEN column1 = '' THEN 
