@@ -19,7 +19,9 @@ document.onreadystatechange = function () {
 			var categoryContent = document.getElementById('category_content');
 			//whether it is message 
 			if( category == 'message'){
-				
+				var uyanFrame = document.createElement("div");
+				uyanFrame.id = "uyan_frame";
+				categoryContent.appendChild(uyanFrame);
 			}else{
 				var contentUL = document.createElement("ul");
 				contentUL.id = 'content_ul';
