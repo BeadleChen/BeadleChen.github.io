@@ -20,7 +20,12 @@ document.onreadystatechange = function () {
 			//whether it is message 
 			if( category == 'message'){
 				var uyanFrame = document.createElement("div");
+				var scriptEle = document.createElement("script");
+				scriptEle.type = "text/javascript";
+				scriptEle.src = "http://v2.uyan.cc/code/uyan.js?uid=2050685";
 				uyanFrame.id = "uyan_frame";
+
+				categoryContent.appendChild(scriptEle);
 				categoryContent.appendChild(uyanFrame);
 			}else{
 				var contentUL = document.createElement("ul");
