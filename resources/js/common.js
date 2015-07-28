@@ -42,18 +42,18 @@ function createXMLRequest() {
 
 function ajax(url,method,fnSucc,data){
 	var request = createXMLRequest();
-	//¶ÔÌØÊâ×Ö·û½øĞĞ×ªÒå
-	//Í¨¹ıget·½Ê½·¢ËÍrequestÇëÇó
-	//true¸Ã²ÎÊı¹æ¶¨ÇëÇóÊÇ·ñÒì²½´¦Àí¡£
-	//True ±íÊ¾½Å±¾»áÔÚ send() ·½·¨Ö®ºó¼ÌĞøÖ´ĞĞ£¬¶ø²»µÈ´ıÀ´×Ô·şÎñÆ÷µÄÏìÓ¦¡£
+	//å¯¹ç‰¹æ®Šå­—ç¬¦è¿›è¡Œè½¬ä¹‰
+	//é€šè¿‡getæ–¹å¼å‘é€requestè¯·æ±‚
+	//trueè¯¥å‚æ•°è§„å®šè¯·æ±‚æ˜¯å¦å¼‚æ­¥å¤„ç†ã€‚
+	//True è¡¨ç¤ºè„šæœ¬ä¼šåœ¨ send() æ–¹æ³•ä¹‹åç»§ç»­æ‰§è¡Œï¼Œè€Œä¸ç­‰å¾…æ¥è‡ªæœåŠ¡å™¨çš„å“åº”ã€‚
 	request.open(method, url, true);
 	if(method.toLowerCase() == 'post'){
 		request.setRequestHeader("Content-Type"
 				, "application/x-www-form-urlencoded");
 	}
 	request.send(data);
-	request.onreadystatechange = function(){  //OnReadyStateChangeÊÂ¼ş
-        if(request.readyState == 4){  //4ÎªÍê³É
+	request.onreadystatechange = function(){  //OnReadyStateChangeäº‹ä»¶
+        if(request.readyState == 4){  //4ä¸ºå®Œæˆ
             fnSucc(request.responseText); 
         }
     };
