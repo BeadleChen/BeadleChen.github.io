@@ -1,0 +1,53 @@
+<h3>一、 概述</h3>
+
+<p>
+Class文件由类装载器装载后，在JVM中将形成一份描述Class结构的元信息对象，</br>
+通过该元信息对象可以获知Class的结构信息：如构造函数，属性和方法等，</br>
+Java允许用户借由这个Class相关的元信息对象间接调用Class对象的功能。</br>
+虚拟机把描述类的数据从class文件加载到内存，并对数据进行校验，转换解析和初始化，</br>
+最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</br>
+</p>
+
+<h3>二、 JVM中的类加载器</h3>
+JVM中有三个类加载器Bootstrap,ExtClassLoader,AppClassLoader.</br>
+他们的关系如下:
+<div class="border_area">
+Bootstrap--------->jre/lib/rt.jar</br>
+↑</br>
+ExtClassLoader---->jre/lib/ext/*.jar</br>
+↑</br>
+AppClassLoader---->classpath指定路径</br>
+↑</br>
+UserClassLoader</br>
+</div>
+
+
+<p>
+
+http://blog.csdn.net/love_Javc_you/article/details/38081683</br>
+几个现象:</br>(虚拟机派当前线程的类加载器，去加载类，如果类还有对其他类的引用，则使用相同加载器继续加载)</br>
+1.在src创建的Test类，在MyClassLoader调用类，并输出其类加载器为App.</br>
+将该类export到/jre/lib/ext中的时候，其类加载器输出为Ext.(注意运行环境)</br>
+2.在Test类中添加引用到MyClassLoader的方法，并在MyClassLoader中引用方法。输出其类加载器为App.</br>
+若将该类export到ext目录中，执行方法报错ClassNotFoundException</br>
+
+
+
+sun.boot.class.path</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\resources.jar;</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\rt.jar;</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\sunrsasign.jar;</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\jsse.jar;</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\jce.jar;</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\charsets.jar;</br>
+C:\Program Files\Java\jdk1.7.0_01\jre\classes</br>
+
+java.ext.dirs</br>
+
+C:\Program Files\Java\jdk1.7.0_01\jre\lib\ext;</br>
+C:\Windows\Sun\Java\lib\ext</br>
+
+java.class.path</br>
+
+E:\workspace\ClassLoaderTest\bin</br>
+</p>
