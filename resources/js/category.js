@@ -1,5 +1,3 @@
-
-
 document.onreadystatechange = function () {   
 	if(document.readyState=="complete") {          
 		var category = getValueBySuffix('category');

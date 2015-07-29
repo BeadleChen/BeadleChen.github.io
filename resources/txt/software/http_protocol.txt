@@ -1,0 +1,302 @@
+<h3>一、HTTP协议的URL</h3>
+<P>
+HTTP URL (URL是一种特殊类型的URI，包含了用于查找某个资源的足够的信息)的格式如下：</br>
+http://host[":"port][abs_path]</br>
+http表示要通过HTTP协议来定位网络资源；</br>
+host表示合法的Internet主机域名或者IP地址；</br>
+port指定一个端口号，为空则使用缺省端口80；</br>
+abs_path指定请求资源的URI；</br>
+如果URL中没有给出abs_path，那么当它作为请求URI时，</br>
+必须以“/”的形式给出，通常这个工作浏览器自动帮我们完成。</br>
+eg:</br>
+1、输入：www.guet.edu.cn</br>
+浏览器自动转换成：http://www.guet.edu.cn/</br>
+2、http:192.168.0.116:8080/index.jsp </br>
+</P>
+
+<h3>二、 Http协议的内容</h3>
+<P>
+http协议请求和响应内容都由三部分组成，分别是：行、报头、正文</br>
+</P>
+<label>2.1 行</label></br>
+</br>
+
+<label>(2.1.1) 请求行</label></br>
+
+<P>
+请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本，</br>
+格式如下：Method Request-URI HTTP-Version CRLF    </br>
+其中 Method表示请求方法；</br>
+Request-URI是一个统一资源标识符；</br>
+HTTP-Version表示请求的HTTP协议版本,当前使用1.1；</br>
+CRLF表示回车和换行（除了作为结尾的CRLF外，不允许出现单独的CR或LF字符）。</br>
+</P>
+<P>
+请求方法（所有方法全为大写）有多种，各个方法的解释如下：</br>
+GET     请求获取Request-URI所标识的资源</br>
+POST    在Request-URI所标识的资源后附加新的数据</br>
+HEAD    请求获取由Request-URI所标识的资源的响应消息报头</br>
+PUT     请求服务器存储一个资源，并用Request-URI作为其标识</br>
+DELETE  请求服务器删除Request-URI所标识的资源</br>
+TRACE   请求服务器回送收到的请求信息，主要用于测试或诊断</br>
+CONNECT 保留将来使用</br>
+OPTIONS 请求查询服务器的性能，或者查询与资源相关的选项和需求</br>
+</P>
+
+<p>
+应用举例：</br>
+GET方法：在浏览器的地址栏中输入网址的方式访问网页时，浏览器采用GET方法向服务器获取资源，</br>
+eg:GET /form.html HTTP/1.1 (CRLF)</br>
+</P>
+<p>
+POST方法要求被请求服务器接受附在请求后面的数据，常用于提交表单。</br>
+eg：POST /reg.jsp HTTP/ (CRLF) </br>
+
+</br>
+<label>(2.1.2) 响应行</label></br>
+<p>
+响应的行称为状态行,格式如下：HTTP-Version Status-Code Reason-Phrase CRLF</br>
+其中，HTTP-Version表示服务器HTTP协议的版本；</br>
+Status-Code表示服务器发回的响应状态代码；</br>
+Reason-Phrase表示状态代码的文本描述。</br>
+状态代码有三位数字组成，第一个数字定义了响应的类别，且有五种可能取值：</br>
+1xx：指示信息--表示请求已接收，继续处理</br>
+2xx：成功--表示请求已被成功接收、理解、接受</br>
+3xx：重定向--要完成请求必须进行更进一步的操作</br>
+4xx：客户端错误--请求有语法错误或请求无法实现</br>
+5xx：服务器端错误--服务器未能实现合法的请求</br>
+状态码详细信息请看:<a target="view_window" href="http://tool.oschina.net/commons?type=5">
+http://tool.oschina.net/commons?type=5</a></br>
+eg：HTTP/1.1 200 OK （CRLF）</br>
+</p>
+
+<label>2.2 报头(header)</label></br>
+<P>
+HTTP头字段包括4类： 
+general-header ; 
+request-header ; 
+response-header ; 
+entity-header .</br>
+</P>
+<label>(2.2.1) general-header</label></br>
+<p>
+general-header是request、response都可用的, 但是不能用于entity.</br>
+通用头域包含请求和响应消息都支持的头域，</br>
+包含Cache-Control、Connection、Date、Pragma、Transfer-Encoding、Upgrade、Via。</br>
+</p>
+<p>
+Cache-Control</br>
+Cache -Control指定请求和响应遵循的缓存机制。</br>
+在请求消息或响应消息中设置 Cache-Control并不会修改另一个消息处理过程中的缓存处理过程。</br>
+请求时的缓存指令包括no-cache、no-store、max-age、 max-stale、min-fresh、only-if-cached，</br>
+响应消息中的指令包括public、private、no-cache、no- store、no-transform、must-revalidate、</br>
+proxy-revalidate、max-age。</br>
+经常使用的就是no-cache,表示不缓存。</br>
+</p>
+<p>
+Date</br>
+Date头域表示消息发送的时间，时间的描述格式由rfc822定义。</br>
+例如，Date:Mon,31Dec200104:25:57GMT。</br>
+Date描述的时间表示世界标准时，换算成本地时间，需要知道用户所在的时区。</br>
+</p>
+<p>
+Pragma</br>
+Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache。</br>
+在HTTP/1.1协议中，它的含义和Cache- Control:no-cache相同。 </br>
+</p>
+
+<label>(2.2.2) request-header</label></br>
+<p>
+请求头域可能包含下列字段Accept、Accept-Charset、Accept- Encoding、</br>
+Accept-Language、Authorization、From、Host、If-Modified-Since、</br>
+If- Match、If-None-Match、If-Range、If-Range、If-Unmodified-Since、</br>
+Max-Forwards、 Proxy-Authorization、Range、Referer、User-Agent。</br>
+<div class="border_area">
+<table border="1" cellpadding="0" width="100%">
+<tbody>
+	<tr>
+		<th>Header</th><th width="35%">解释</th><th width="40%">示例</th>
+	</tr>
+	<tr>
+		<td>Accept</td>
+		<td width="35%">指定客户端能够接收的内容类型</td>
+		<td width="40%">Accept: text/plain, text/html</td>
+	</tr>
+	<tr>
+		<td>Accept-Charset</td>
+		<td width="35%">浏览器可以接受的字符编码集。</td>
+		<td width="40%">Accept-Charset: iso-8859-5</td>
+	</tr>
+	<tr>
+		<td>Accept-Encoding</td>
+		<td width="35%">指定浏览器可以支持的web服务器返回内容压缩编码类型。</td>
+		<td width="40%">Accept-Encoding: compress, gzip</td>
+	</tr>
+	<tr>
+		<td>Accept-Language</td>
+		<td width="35%">浏览器可接受的语言</td>
+		<td width="40%">Accept-Language: en,zh</td>
+	</tr>
+	<tr>
+		<td>Accept-Ranges</td>
+		<td width="35%">可以请求网页实体的一个或者多个子范围字段</td>
+		<td width="40%">Accept-Ranges: bytes</td>
+	</tr>
+	<tr>
+		<td>Authorization</td>
+		<td width="35%">HTTP授权的授权证书</td>
+		<td width="40%">Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</td>
+	</tr>
+
+	<tr>
+		<td>Range</td>
+		<td width="35%">只请求实体的一部分，指定范围</td>
+		<td width="40%">Range: bytes=500-999</td>
+	</tr>
+	<tr>
+		<td>Referer</td>
+		<td width="35%">先前网页的地址，当前请求网页紧随其后,即来路</td>
+		<td width="40%">Referer: http://www.zcmhi.com/archives/71.html</td>
+	</tr>
+	<tr>
+		<td>User-Agent</td>
+		<td width="35%">User-Agent的内容包含发出请求的用户信息</td>
+		<td width="40%">User-Agent: Mozilla/5.0 (Linux; X11)</td>
+	</tr>
+</tbody>
+</table>
+</div>
+</p>
+
+<label>(2.2.3) response-header</label></br>
+
+<p>
+响应头域允许服务器传递不能放在状态行的附加信息，</br>
+这些域主要描述服务器的信息和 Request-URI进一步的信息。</br>
+响应头域包含Age、Location、Proxy-Authenticate、Public、</br>
+Retry-After、Server、Vary、Warning、WWW-Authenticate。</br>
+<div class="border_area">
+<table border="1" cellpadding="0" width="100%">
+<tbody>
+	<tr>
+		<th>Header</th><th width="35%">解释</th><th width="40%">示例</th>
+	</tr>
+	
+	<tr>
+		<td>Age</td>
+		<td width="35%">从原始服务器到代理缓存形成的估算时间（以秒计，非负）</td>
+		<td width="40%">Age: 12</td>
+	</tr>
+	<tr>
+		<td>Location</td>
+		<td width="35%">用来重定向接收方到非请求URL的位置来完成请求或标识新的资源</td>
+		<td width="40%">Location: http://www.zcmhi.com/archives/94.html</td>
+	</tr>
+	<tr>
+		<td>Proxy-Authenticate</td>
+		<td width="35%">它指出认证方案和可应用到代理的该URL上的参数</td>
+		<td width="40%">Proxy-Authenticate: Basic</td>
+	</tr>
+	<tr>
+		<td>Server</td>
+		<td width="35%">web服务器软件名称</td>
+		<td width="40%">Server: Apache/1.3.27 (Unix) (Red-Hat/Linux)</td>
+	</tr>
+	<tr>
+		<td>Retry-After</td>
+		<td width="35%">如果实体暂时不可取，通知客户端在指定时间之后再次尝试</td>
+		<td width="40%">Retry-After: 120</td>
+	</tr>
+	<tr>
+		<td>Vary</td>
+		<td width="35%">告诉下游代理是使用缓存响应还是从原始服务器请求</td>
+		<td width="40%">Vary: *</td>
+	</tr>
+	<tr>
+		<td>Warning</td>
+		<td width="35%">警告实体可能存在的问题</td>
+		<td width="40%">Warning: 199 Miscellaneous warning</td>
+	</tr>
+	<tr>
+		<td>WWW-Authenticate</td>
+		<td width="35%">表明客户端请求实体应该使用的授权方案</td>
+		<td width="40%">WWW-Authenticate: Basic</td>
+	</tr>
+</tbody>
+</table>
+</div>
+</p>
+
+<label>(2.2.4) entity-header</label></br>
+
+<p>
+实体头域包含关于实体的原信息，实体头包括Allow、Content- Base、Content-Encoding、</br>
+Content-Language、 Content-Length、Content-Location、Content-MD5、</br>
+Content-Range、Content-Type、 Etag、Expires、Last-Modified、extension-header。</br>
+<div class="border_area">
+<table border="1" cellpadding="0" width="100%">
+<tbody>
+	<tr>
+		<th>Header</th><th width="35%">解释</th><th width="40%">示例</th>
+	</tr>
+	
+	<tr>
+		<td>Allow</td>
+		<td width="35%">对某网络资源的有效的请求行为，不允许则返回405</td>
+		<td width="40%">Allow: GET, HEAD</td>
+	</tr>
+		<td>Content-Encoding</td>
+		<td width="35%">web服务器支持的返回内容压缩编码类型。</td>
+		<td width="40%">Content-Encoding: gzip</td>
+	</tr>
+	<tr>
+		<td>Content-Language</td>
+		<td width="35%">响应体的语言</td>
+		<td width="40%">Content-Language: en,zh</td>
+	</tr>
+	<tr>
+		<td>Content-Length</td>
+		<td width="35%">响应体的长度</td>
+		<td width="40%">Content-Length: 348</td>
+	</tr>
+	<tr>
+		<td>Content-Location</td>
+		<td width="35%">请求资源可替代的备用的另一地址</td>
+		<td width="40%">Content-Location: /index.htm</td>
+	</tr>
+	<tr>
+		<td>Content-MD5</td>
+		<td width="35%">返回资源的MD5校验值</td>
+		<td width="40%">Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</td>
+	</tr>
+	<tr>
+		<td>Content-Range</td>
+		<td width="35%">在整个返回体中本部分的字节位置</td>
+		<td width="40%">Content-Range: bytes 21010-47021/47022</td>
+	</tr>
+	<tr>
+		<td>Content-Type</td>
+		<td width="35%">返回内容的MIME类型</td>
+		<td width="40%">Content-Type: text/html; charset=utf-8</td>
+	</tr>
+	<tr>
+		<td>ETag</td>
+		<td width="35%">请求变量的实体标签的当前值</td>
+		<td width="40%">ETag: “737060cd8c284d8af7ad3082f209582d”</td>
+	</tr>
+	<tr>
+		<td>Expires</td>
+		<td width="35%">响应过期的日期和时间</td>
+		<td width="40%">Expires: Thu, 01 Dec 2010 16:00:00 GMT</td>
+	</tr>
+	<tr>
+		<td>Last-Modified</td>
+		<td width="35%">请求资源的最后修改时间</td>
+		<td width="40%">Last-Modified: Tue, 15 Nov 2010 12:45:26 GMT</td>
+	</tr>
+</tbody>
+</table>
+</p>
+
+
+
