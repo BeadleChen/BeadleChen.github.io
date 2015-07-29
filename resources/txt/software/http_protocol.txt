@@ -15,13 +15,25 @@ eg:</br>
 </P>
 
 <h3>二、 Http协议的内容</h3>
+<p>
+Request and Response messages use the generic message format of RFC 822 [9] for transferring</br>
+entities (the payload of the message). Both types of message consist of a start-line, </br>
+zero or more header fields (also known as "headers"), </br>
+an empty line (i.e., a line with nothing preceding the CRLF) </br>
+indicating the end of the header fields, and possibly a message-body.</br>
+　　　　generic-message = start-line</br>
+　　　　　　　　　　　　　*(message-header CRLF)</br>
+　　　　　　　　　　　　　CRLF</br>
+　　　　　　　　　　　　　[ message-body ]</br>
+</p>
 <P>
-http协议请求和响应内容都由三部分组成，分别是：行、报头、正文</br>
+http协议请求和响应内容都由三部分组成，分别是：行(请求行和状态行)、报头(消息头)、正文(消息体)</br>
+消息头和消息体之间,用CRLF(回车和换行)隔开,表示报头域的结束.
 </P>
-<label>2.1 行</label></br>
+<label>2.1 行(start-line)</label></br>
 </br>
 
-<label>(2.1.1) 请求行</label></br>
+<label>(2.1.1) 请求行(Request-Line)</label></br>
 
 <P>
 请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本，</br>
@@ -53,7 +65,7 @@ POST方法要求被请求服务器接受附在请求后面的数据，常用于�
 eg：POST /reg.jsp HTTP/ (CRLF) </br>
 
 </br>
-<label>(2.1.2) 响应行</label></br>
+<label>(2.1.2) 状态行(Status-Line)</label></br>
 <p>
 响应的行称为状态行,格式如下：HTTP-Version Status-Code Reason-Phrase CRLF</br>
 其中，HTTP-Version表示服务器HTTP协议的版本；</br>
@@ -65,12 +77,11 @@ Reason-Phrase表示状态代码的文本描述。</br>
 3xx：重定向--要完成请求必须进行更进一步的操作</br>
 4xx：客户端错误--请求有语法错误或请求无法实现</br>
 5xx：服务器端错误--服务器未能实现合法的请求</br>
-状态码详细信息请看:<a target="view_window" href="http://tool.oschina.net/commons?type=5">
-http://tool.oschina.net/commons?type=5</a></br>
+
 eg：HTTP/1.1 200 OK （CRLF）</br>
 </p>
 
-<label>2.2 报头(header)</label></br>
+<label>2.2 报头(Message Header)</label></br>
 <P>
 HTTP头字段包括4类： 
 general-header ; 
@@ -78,7 +89,7 @@ request-header ;
 response-header ; 
 entity-header .</br>
 </P>
-<label>(2.2.1) general-header</label></br>
+<label>(2.2.1) 常规头(General Header)</label></br>
 <p>
 general-header是request、response都可用的, 但是不能用于entity.</br>
 通用头域包含请求和响应消息都支持的头域，</br>
@@ -105,9 +116,9 @@ Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache�
 在HTTP/1.1协议中，它的含义和Cache- Control:no-cache相同。 </br>
 </p>
 
-<label>(2.2.2) request-header</label></br>
+<label>(2.2.2) 请求头(Request Header)</label></br>
 <p>
-请求头域可能包含下列字段Accept、Accept-Charset、Accept- Encoding、</br>
+请求头域可能包含下列字段Accept、Accept-Charset、Accept-Encoding、</br>
 Accept-Language、Authorization、From、Host、If-Modified-Since、</br>
 If- Match、If-None-Match、If-Range、If-Range、If-Unmodified-Since、</br>
 Max-Forwards、 Proxy-Authorization、Range、Referer、User-Agent。</br>
@@ -137,21 +148,16 @@ Max-Forwards、 Proxy-Authorization、Range、Referer、User-Agent。</br>
 		<td width="35%">浏览器可接受的语言</td>
 		<td width="40%">Accept-Language: en,zh</td>
 	</tr>
-	<tr>
-		<td>Accept-Ranges</td>
-		<td width="35%">可以请求网页实体的一个或者多个子范围字段</td>
-		<td width="40%">Accept-Ranges: bytes</td>
-	</tr>
-	<tr>
-		<td>Authorization</td>
-		<td width="35%">HTTP授权的授权证书</td>
-		<td width="40%">Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</td>
-	</tr>
 
 	<tr>
-		<td>Range</td>
-		<td width="35%">只请求实体的一部分，指定范围</td>
-		<td width="40%">Range: bytes=500-999</td>
+		<td>Host</td>
+		<td width="35%">指定请求的服务器的域名和端口号</td>
+		<td width="40%">Host: www.zcmhi.com</td>
+	</tr>
+	<tr>
+		<td>From</td>
+		<td width="35%">发出请求的用户的Email</td>
+		<td width="40%">From: user@email.com</td>
 	</tr>
 	<tr>
 		<td>Referer</td>
@@ -168,7 +174,7 @@ Max-Forwards、 Proxy-Authorization、Range、Referer、User-Agent。</br>
 </div>
 </p>
 
-<label>(2.2.3) response-header</label></br>
+<label>(2.2.3) 响应头(Response Header)</label></br>
 
 <p>
 响应头域允许服务器传递不能放在状态行的附加信息，</br>
@@ -227,7 +233,7 @@ Retry-After、Server、Vary、Warning、WWW-Authenticate。</br>
 </div>
 </p>
 
-<label>(2.2.4) entity-header</label></br>
+<label>(2.2.4) 实体头(Entity Header)</label></br>
 
 <p>
 实体头域包含关于实体的原信息，实体头包括Allow、Content- Base、Content-Encoding、</br>
@@ -297,6 +303,39 @@ Content-Range、Content-Type、 Etag、Expires、Last-Modified、extension-heade
 </tbody>
 </table>
 </p>
+<p>
+看到这里你可能会很奇怪，为什么会没有Cookie，Content-Disposition这种常见的信息头？！</br>
+这里我说一下，Content-Disposition不是HTTP标准的一部分，但它在其他RFC文档中定义了（RFC1806）。</br>
+而Cookie呢？首先看看Cookie是用来干嘛的：Cookie和Session是为了解决Http协议中无状态的问题</br>
+，由于Http的设计者们时就没打算让Http有状态这种特性，故Cookie这种东西是肯定不可能</br>
+是Http标准中的一部分。其实，它们都属于上面所说的：extension-header。</br>
+</p>
+
+<label>2.3 消息体(Message Body)</label></br>
+<p>
+The message-body (if any) of an HTTP message is used to carry the entity-body associated </br>
+with the request or response. The message-body differs from the entity-body only when a </br>
+transfer-coding has been applied, as indicated by the Transfer-Encoding header field.</br>
+(message-body = entity-body</br>
+　　　　　　　　　　　| entity-body encoded as per Transfer-Encoding )</br>
+</p>
+<p>
+消息头和消息体之间是一个空行，这个行非常重要，它表示消息头已经结束，接下来的是消息体。</br>
+通常情况下Post方式请求的消息体,内容格式:param1=value1&param2=value2</br>
+响应的消息体常见有html和json的消息体,</br>
+json格式:{"key1":"value1","key2":"value2"}</br>
+html格式:</br>
+&lt;!DOCTYPE html&gt;</br>
+&lt;html lang="zh-cn"&gt;</br>
+...</br>
+...</br>
+&lt;/html&gt;</br>
+</p>
 
 
 
+<h3>三、 参考资料</h3>
+(1)<a target="view_window" href="http://tool.oschina.net/commons?type=5">状态码详细信息</a></br>
+(2)<a target="view_window" href="http://kb.cnblogs.com/page/92320/">更多消息头的信息</a></br>
+(3)<a target="view_window" href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">Http/1.1 Document</a></br>
+(4)<a target="view_window" href="http://www.faqs.org/faqs/">RFC Archives</a></br>
