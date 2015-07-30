@@ -1,30 +1,230 @@
 <h3>一、 概述</h3>
 
 <p>
-Class文件由类装载器装载后，在JVM中将形成一份描述Class结构的元信息对象，</br>
-通过该元信息对象可以获知Class的结构信息：如构造函数，属性和方法等，</br>
-Java允许用户借由这个Class相关的元信息对象间接调用Class对象的功能。</br>
-虚拟机把描述类的数据从class文件加载到内存，并对数据进行校验，转换解析和初始化，</br>
+通俗来说类加载器就是加载.class文件的字节码到内存，并对数据进行校验，转换解析和初始化，</br>
+在JVM中形成一份描述Class结构的元信息对象，包含构造函数，属性和方法等。</br>
 最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。</br>
 </p>
 
 <h3>二、 JVM中的类加载器</h3>
 JVM中有三个类加载器Bootstrap,ExtClassLoader,AppClassLoader.</br>
-他们的关系如下:
+用户也可以自定义自己的类加载器，这里我们称为UserClassLoader.</br>
+他们的关系如下:</br>
 <div class="border_area">
-Bootstrap--------->jre/lib/rt.jar</br>
+Bootstrap</br>
 ↑</br>
-ExtClassLoader---->jre/lib/ext/*.jar</br>
+ExtClassLoader</br>
 ↑</br>
-AppClassLoader---->classpath指定路径</br>
+AppClassLoader</br>
 ↑</br>
 UserClassLoader</br>
 </div>
+<p>
+如上图所示的类加载器之间的这种层次关系，就称为类加载器的双亲委派模型（Parent Delegation Model）。</br>
+该模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。</br>
+子类加载器和父类加载器不是以继承（Inheritance）的关系来实现，而是通过组合（Composition）</br>
+关系来复用父加载器的代码。即在进行初始化类加载器的时候，会通过构造方法传递其父类加载器，</br>
+并通过方法getParent()获得其父类加载器。</br>
+</p>
+<p>
+双亲委派模型的工作过程为：</br>
+如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，
+而是把这个请求委派给父类加载器去完成，每一个层次的加载器都是如此，
+因此所有的类加载请求都会传给顶层的启动类加载器，只有当父加载器反馈
+自己无法完成该加载请求（该加载器的搜索范围中没有找到对应的类）时，
+子加载器才会尝试自己去加载。
+</p>
+<p>
+使用这种模型来组织类加载器之间的关系的好处是Java类随着它的类加载器一
+起具备了一种带有优先级的层次关系。例如java.lang.Object类，无论哪个类加
+载器去加载该类，最终都是由启动类加载器进行加载，因此Object类在程序的各种
+类加载器环境中都是同一个类。否则的话，如果不使用该模型的话，如果用户自定义
+一个java.lang.Object类且存放在classpath中，那么系统中将会出现多个Object类，
+应用程序也会变得很混乱。如果我们自定义一个rt.jar中已有类的同名Java类，
+会发现JVM可以正常编译，但该类永远无法被加载运行。
+</p>
+<p>
+此外，当一个classloader加载一个Class的时候，这个Class所依赖的和引用的
+所有Class也由这个classloader负责载入，除非是显式的使用另外一个classloader载入。 
+</p>
+
+<h3>三、 ClassLoader源码解析</h3>
+
+<div class="border_area">
+protected Class<?> loadClass(String name, boolean resolve)</br>
+　　　　throws ClassNotFoundException</br>
+　　{</br>
+　　　　synchronized (getClassLoadingLock(name)) {</br>
+　　　　　　// First, check if the class has already been loaded</br>
+　　　　　　Class<?> c = findLoadedClass(name);</br>
+　　　　　　if (c == null) {</br>
+　　　　　　　　long t0 = System.nanoTime();</br>
+　　　　　　　　try {</br>
+　　　　　　　　　　if (parent != null) {</br>
+　　　　　　　　　　　　c = parent.loadClass(name, false);</br>
+　　　　　　　　　　} else {</br>
+　　　　　　　　　　　　c = findBootstrapClassOrNull(name);</br>
+　　　　　　　　　　}</br>
+　　　　　　　　} catch (ClassNotFoundException e) {</br>
+　　　　　　　　　　// ClassNotFoundException thrown if class not found</br>
+　　　　　　　　　　// from the non-null parent class loader</br>
+　　　　　　　　}</br>
+
+　　　　　　　　if (c == null) {</br>
+　　　　　　　　　　// If still not found, then invoke findClass in order</br>
+　　　　　　　　　　// to find the class.</br>
+　　　　　　　　　　long t1 = System.nanoTime();</br>
+　　　　　　　　　　c = findClass(name);</br>
+
+　　　　　　　　　　// this is the defining class loader; record the stats</br>
+　　　　　　　　　　sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</br>
+　　　　　　　　　　sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</br>
+　　　　　　　　　　sun.misc.PerfCounter.getFindClasses().increment();</br>
+　　　　　　　　}</br>
+　　　　　　}</br>
+　　　　　　if (resolve) {</br>
+　　　　　　　　resolveClass(c);</br>
+　　　　　　}</br>
+　　　　　　return c;</br>
+　　　　}</br>
+　　}</br>
+</div>
+<p>
+上面源代码可知,当我们调用ClassLoader.loadClass方法时，先调用findLoadedClass,</br>
+此方法会校验名称并判断是否是JVM初始化时已经加载过的类。之后调用parent.loadClass(name, false)，</br>
+因此如果是个AppClassLoader,会先调用ExtClassLoader.loadClass,Ext调用Bootstrap的loadClass.</br>
+如果父类返回的Class为空，才调用自己的findClass.这里的findClass是protected且无内容，需要子类去实现。</br>
+这里URLClassLoader是App和Ext的通过继承的父类，findClass源码如下:</br>
+<div class="border_area">
+protected Class<?> findClass(final String name)</br>
+　　　　throws ClassNotFoundException</br>
+　　{</br>
+　　　　final Class<?> result;</br>
+　　　　try {</br>
+　　　　　　result = AccessController.doPrivileged(</br>
+　　　　　　　　new PrivilegedExceptionAction<Class<?>>() {</br>
+　　　　　　　　　　public Class<?> run() throws ClassNotFoundException {</br>
+　　　　　　　　　　　　String path = name.replace('.', '/').concat(".class");</br>
+　　　　　　　　　　　　Resource res = ucp.getResource(path, false);</br>
+　　　　　　　　　　　　if (res != null) {</br>
+　　　　　　　　　　　　　　try {</br>
+　　　　　　　　　　　　　　　　return defineClass(name, res);</br>
+　　　　　　　　　　　　　　} catch (IOException e) {</br>
+　　　　　　　　　　　　　　　　throw new ClassNotFoundException(name, e);</br>
+　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　} else {</br>
+　　　　　　　　　　　　　　return null;</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　　　}</br>
+　　　　　　　　}, acc);</br>
+　　　　} catch (java.security.PrivilegedActionException pae) {</br>
+　　　　　　throw (ClassNotFoundException) pae.getException();</br>
+　　　　}</br>
+　　　　if (result == null) {</br>
+　　　　　　throw new ClassNotFoundException(name);</br>
+　　　　}</br>
+　　　　return result;</br>
+　　}</br>
+</div>
+findClass首先会将name中的"."转换成文件路径"/",并在后缀加上".class".</br>
+之后通过URLClassPath.getResource方法获取到文件的Resources,再执行defineClass(name, res)</br>
+最终都会调用本地方法defineClass.</br>
+<p>
+
+<p>
+由此可见类加载器的委托机制，是一种模板方法，将loadClass的模板方法写好，实现父亲委托，具体</br>
+本类的findClass由子类实现。而子类findClass可以对文件名进行解析，获取到class文件的字节流，</br>
+在调用ClassLoader提供的多种defindClass来得到Class对象。</br>
+因此,官方建议我们自定义加载类实现如下:
+<div class="border_area">
+class NetworkClassLoader extends ClassLoader {</br>
+　　　　public Class findClass(String name) {</br>
+　　　　　　byte[] b = loadClassData(name);</br>
+　　　　　　return defineClass(name, b, 0, b.length);</br>
+　　　　}</br>
+　　　　private byte[] loadClassData(String name) {</br>
+　　　　　　// load the class data from the connection</br>
+　　　　　　. . .</br>
+　　　　}</br>
+　　}</br>
+</div>
+主要是重写findClass方法，通过文件名，能获取到class文件的字节数组byte[],</br>
+在通过调用ClassLoader的definClass(String,byte[],int,int)方法得到Class对象。</br>
+</p>
+
+<h3>三、 JVM三个类加载器介绍</h3>
+
+<p>
+首先在main方法中执行下列语句，显示出系统的参数:
+<div class="border_area">
+　　for (Map.Entry<Object, Object> entry : System.getProperties().entrySet()) { </br>
+　　　　System.out.println(entry.getKey()+"\t"+entry.getValue()); </br>
+　　}</br>
+</div>
+</p>
+
+<label>3.1 Bootstrap</label></br>
+
+<p>
+bootstrap初始化的时候会默认加载路径bootClassPath=System.getProperty("sun.boot.class.path"),</br>
+参数内容如下:
+</p>
+<div class="border_area">
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\resources.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\rt.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\sunrsasign.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\jsse.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\jce.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\charsets.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\jfr.jar;</br>
+C:\Program Files (x86)\Java\jre1.8.0_40\classes</br>
+</div>
+<p>
+会默认加载jre/lib下的几个jar包，还会加载jre/classes文件夹下的class文件。</br>
+在默认安装jdk时，jre下是没有classes文件夹的，如果我们希望bootstrap在加载</br>
+时可以加载classes文件夹下的类，可以在jre下新建一个classes文件夹，并将编译</br>
+好的.class文件根据其package路径创建一系列的文件夹放在classes目录下即可.</br>
+举例:</br>
+在项目中创建一个org.beadle.Test.java,并编译成功，将项目bin/org/beadle/Test.class</br>
+拷贝到jre/classes文件夹下，此时目录为jre/classes/org/beadle/Test.class,</br>
+这是在项目main方法中获取Test.class的类加载器 显示为null，bootstrap非Java类，由C++代码编写，</br>
+所以显示为null.</br>
+</p>
+
+<label>3.2 ExtClassLoader</label></br>
+
+<p>
+ExtClassLoader初始化的时候会默认加载路径System.getProperty("java.ext.dirs");</br>
+参数内容如下:
+<div class="border_area">
+C:\Program Files (x86)\Java\jre1.8.0_40\lib\ext;</br>
+C:\Windows\Sun\Java\lib\ext</br>
+</div>
+会默认加载jre/lib/ext下的所有扩展包(基本情况会加载，除非特例)</br>
+除此之外还会加载C:\Windows\Sun\Java\lib\ext下的所有jar包.</br>
+系统默认是不会有C:\Windows\Sun\Java\lib\ext路径的需要自己创建.</br>
+这里如果需要在两个ext目录下导入自己的jar包，可以使用eclipse提供的export.</br>
+然后选择jar file,在选择路径即可。</br>
+<span>注:</span></br>
+大家可以恶作剧，在别人电脑上创建C:\Windows\Sun\Java\lib\ext,</br>
+将一些修改过的tomcat的jar包扔里面，这是别人的tomcat启动不起来，</br>
+也很难找到原因。</br>
+</p>
+
+<label>3.3 AppClassLoader</label></br>
+
+<p>
+AppClassLoader初始化的时候会默认加载路径System.getProperty("java.class.path");</br>
+参数内容:E:\workspace\JVMTest\bin</br>
+即工作的项目路径下的bin目录.这里就不需要做介绍了</br>
+</p>
+
+
 
 
 <p>
 
-http://blog.csdn.net/love_Javc_you/article/details/38081683</br>
+
 几个现象:</br>(虚拟机派当前线程的类加载器，去加载类，如果类还有对其他类的引用，则使用相同加载器继续加载)</br>
 1.在src创建的Test类，在MyClassLoader调用类，并输出其类加载器为App.</br>
 将该类export到/jre/lib/ext中的时候，其类加载器输出为Ext.(注意运行环境)</br>
@@ -32,22 +232,4 @@ http://blog.csdn.net/love_Javc_you/article/details/38081683</br>
 若将该类export到ext目录中，执行方法报错ClassNotFoundException</br>
 
 
-
-sun.boot.class.path</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\resources.jar;</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\rt.jar;</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\sunrsasign.jar;</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\jsse.jar;</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\jce.jar;</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\charsets.jar;</br>
-C:\Program Files\Java\jdk1.7.0_01\jre\classes</br>
-
-java.ext.dirs</br>
-
-C:\Program Files\Java\jdk1.7.0_01\jre\lib\ext;</br>
-C:\Windows\Sun\Java\lib\ext</br>
-
-java.class.path</br>
-
-E:\workspace\ClassLoaderTest\bin</br>
 </p>
