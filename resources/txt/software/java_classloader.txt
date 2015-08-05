@@ -241,8 +241,18 @@ C:\Windows\Sun\Java\lib\ext</br>
 
 <p>
 AppClassLoader初始化的时候会默认加载路径System.getProperty("java.class.path");</br>
-参数内容:E:\workspace\JVMTest\bin</br>
-即工作的项目路径下的bin目录.这里就不需要做介绍了</br>
+参数内容:</br>
+<div class="border_area">
+---------------------普通Java Project运行类路径---------------------------
+E:\workspace\JVMTest\bin;(项目运行的bin目录)</br>
+E:\workspace\JVMTest\lib\commons-beanutils-core-1.8.3.jar;(两个依赖的jar包路径)</br>
+E:\workspace\JVMTest\lib\commons-logging-1.2.jar</br>
+---------------------JavaWeb Project运行类路径---------------------------
+D:\software\tomcat\apache-tomcat-7.0.53\bin\bootstrap.jar;
+D:\software\tomcat\apache-tomcat-7.0.53\bin\tomcat-juli.jar;
+</div>
+Eclipse运行项目的classpath和项目文件的.classpath文件相关。</br>
+可通过Run Configuration查看运行的类路径</br>
 </p>
 
 <h3>四、 类加载器的工作空间</h3>
