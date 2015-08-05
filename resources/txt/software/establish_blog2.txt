@@ -82,6 +82,7 @@ http://[organization].github.io/[repository]</br>
 git config --global credential.helper 'store' </br>
 取消保存
 git config --global credential.helper '' </br>
+git config --global push.default 'simple' 设置push默认为simple</br>   
 git branch 列出所有本地端的 branch。</br>
 git branch -r 列出所有远端的 branch。</br>
 git branch -a 列出所有本地及远端的 branch。</br>

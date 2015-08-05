@@ -38,7 +38,7 @@
 					<div class='head_date'>日期:2015-08-02</div>
 				</h4>
 				<p class='list-group-item-text'>
-					人生的意义,可能有很多,可能一个也没有.
+					主要记录了Mysql在查询时候运用到的一些常用和不常用的函数.
 				</p>
 			</a> 
 			<a href="content/blog.html#category=software#article=java_classloader"
