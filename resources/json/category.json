@@ -34,5 +34,12 @@
 		]
 	}
 	,
+	"boring":{
+		"title" : "无聊文章",
+		"content":[
+			{"article":"Rock_Paper_Scissors","title":"如何在剪刀石头布中获胜","date":"2015-08-10"}
+		]
+	}
+	,
 	"message":{"title" : "留言簿"}
 }
