@@ -1,0 +1,42 @@
+<h3>一、 Java自带的代理示例</h3>
+
+<p>
+<div class="border_area">
+public class Main {</br>
+　　　　public static void main(String[] args) throws Exception{</br>
+　　　　　　　　Class[] clazzs = {TestInter.class};</br>
+　　　　　　　　final TestInter t = new Test();</br>
+　　　　　　　　final TestInter ti = (TestInter)Proxy.newProxyInstance(</br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　Main.class.getClassLoader(), </br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　clazzs , </br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　new InvocationHandler() {</br>
+　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　public Object invoke(Object proxy, Method method, Object[] args)</br>
+　　　　　　　　　　　　　　　　　　　　throws Throwable {</br>
+　　　　　　　　　　　　　　　　System.out.println("before test");</br>
+　　　　　　　　　　　　　　　　Object obj = method.invoke(t, args);</br>
+　　　　　　　　　　　　　　　　System.out.println("after test");</br>
+　　　　　　　　　　　　　　　　return obj;</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　});</br>
+		
+　　　　　　　　TestInter ti2 = (TestInter)Proxy.newProxyInstance(</br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　Main.class.getClassLoader(), </br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　clazzs , </br>
+　　　　　　　　　　　　　　　　　　　　　　　　　　new InvocationHandler() {</br>
+　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　public Object invoke(Object proxy, Method method, Object[] args)</br>
+　　　　　　　　　　　　　　　　　　　　throws Throwable {</br>
+　　　　　　　　　　　　　　　　System.out.println("before test2");</br>
+　　　　　　　　　　　　　　　　Object obj = method.invoke(ti, args);</br>
+　　　　　　　　　　　　　　　　System.out.println("after test2");</br>
+　　　　　　　　　　　　　　　　return obj;</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　});</br>
+　　　　　　　　ti2.test();</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
+
+<h3>二、 Java6自带编译器JavaCompiler</h3>

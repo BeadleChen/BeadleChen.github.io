@@ -271,3 +271,29 @@ ext,app三个类加载器的实例只有一个,因此不会造成一个类被多
 下面，因此当两个UserClassLoader加载同一份class字节码时，JVM也会认定他们不属于同一Class。</br>
 因为这时一份Class字节码被加载到两个不相关的工作空间中。
 </p>
+
+<h3>五、 拓展知识</h3>
+
+<p>
+对于类加载器，还可以通过URLClassPath获取资源，
+其中包括jar包里的资源。</br>
+<div class="border_area">
+public class Main {</br>
+
+　　　　public static void main(String[] args) throws Exception{</br>
+　　　　　　　　File file = new File("D:\\beadle\\com.zip");</br>
+　　　　　　　　File file2 = new File("D:\\beadle");</br>
+　　　　　　　　URL[] urls = { file.toURI().toURL(),file2.toURI().toURL() }; </br>
+　　　　　　　　URLClassPath ucp = new URLClassPath(urls);</br>
+　　　　　　　　String path = "com.beadle.test.Test";</br>
+　　　　　　　　Resource res = ucp.getResource(path.replace('.', '/').concat(".class"),false);</br>
+　　　　　　　　System.out.println(res);</br>
+　　　　　　　　byte[] b = res.getBytes();</br>
+　　　　　　　　System.out.println(new String(b));</br>
+　　　　　　　　ClassLoader cl = URLClassLoader.newInstance(urls);</br>
+　　　　　　　　TestInter test = (TestInter)cl.loadClass("com.beadle.test.Test").newInstance();</br>
+　　　　　　　　test.test();</br>
+　　　　}</br>
+}
+</div>
+</p>
