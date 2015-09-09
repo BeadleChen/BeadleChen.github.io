@@ -2,7 +2,7 @@
 	"life":{
 		"title" : "生活随笔",
 		"content":[
-			{"article":"a_letter_for_teacher","title":"恩师表","date":"2015-09-09"},
+			{"article":"a_letter_to_teacher","title":"恩师表","date":"2015-09-09"},
 			{"article":"life","title":"生活小记","date":"2015-07-08"},
 			{"article":"my_game_life","title":"我的游戏人生","date":"2015-08-27"},
 			{"article":"life_thinking","title":"人这一辈子","date":"2015-08-02"},

@@ -40,3 +40,174 @@ public class Main {</br>
 </p>
 
 <h3>二、 Java6自带编译器JavaCompiler</h3>
+
+<p>
+<div class="border_area">
+public class Main {</br>
+　　　　public static void main(String[] args) throws Exception{</br>
+　　　　　　　　String className = "Test";</br>
+　　　　　　　　String packageName = "com.beadle.test";</br>
+　　　　　　　　String fileContent = "package "+packageName+";"+</br>
+　　　　　　　　　　　　　　　　"public class "+className+" implements TestInter{"+</br>
+　　　　　　　　　　　　　　　　　　　　"public void test() {"+</br>
+　　　　　　　　　　　　　　　　　　　　"System.out.println(\"beadle2\");"+</br>
+　　　　　　　　　　　　　　　　　　　　"}"+</br>
+　　　　　　　　　　　　　　　　"}";</br>
+　　　　　　　　File file = new File("F:/compiler/src/"+</br>
+　　　　　　　　　　　　　　　　packageName.replace(".", "/")+"/"+className+".java");</br>
+　　　　　　　　if(!file.exists()){</br>
+　　　　　　　　　　　　file.getParentFile().mkdirs();</br>
+　　　　　　　　　　　　FileOutputStream fos = new FileOutputStream(file);</br>
+　　　　　　　　　　　　fos.write(fileContent.getBytes());</br>
+　　　　　　　　　　　　fos.close();</br>
+　　　　　　　　}</br>		
+　　　　　　　　JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();</br>
+　　　　　　　　StandardJavaFileManager fileMgr = </br>
+　　　　　　　　　　　　　　　　compiler.getStandardFileManager(null, null, null);</br>
+　　　　　　　　Iterable units = fileMgr.getJavaFileObjects(file);</br>
+　　　　　　　　CompilationTask t = compiler.getTask(null, fileMgr, null, null, null, units);</br>
+　　　　　　　　t.call();</br>
+　　　　　　　　fileMgr.close();</br>	
+　　　　　　　　//load into memory and create an instance</br>
+　　　　　　　　URL[] urls = new URL[] {new URL("file:/F:/compiler/src/")};</br>
+　　　　　　　　ClassLoader ul = new URLClassLoader(urls);</br>
+　　　　　　　　TestInter ti = (TestInter)ul.loadClass(packageName+"."+className).newInstance();</br>
+　　　　　　　　ti.test();</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
+
+<h3>二、 简单模拟Proxy.newProxyInstance()生成代理对象</h3>
+
+<p>
+原理:通过传递过来的Interface的Class对象，模拟生成代理对象的java文件字符串，</br>
+通过在本地生成文件，并使用Java自带Compiler进行编译，用类加载器进行加载并实例化代理对象。</br>
+</p>
+<p>
+<div class="border_area">
+public class Proxy {</br>
+　　　　public static Object newProxyInstance(Class interfaceClass,InvocationHandler handler){</br>
+　　　　　　　　Method[] methods = interfaceClass.getMethods();</br>
+　　　　　　　　String packageName = Proxy.class.getPackage().getName();</br>
+　　　　　　　　String className = "$Proxy0";</br>
+　　　　　　　　String r = "\r";</br>
+　　　　　　　　String fileContent = "package "+packageName+";"+r+</br>
+　　　　　　　　　　　　　　　　"import java.lang.reflect.Method;"+r+r+</br>
+　　　　　　　　　　　　　　　　"public class "+className+" implements "+</br>
+　　　　　　　　　　　　　　　　　　　　interfaceClass.getCanonicalName() + "{"+r+</br>
+　　　　　　　　　　　　　　　　"    private InvocationHandler handler;"+r+</br>
+　　　　　　　　　　　　　　　　"    public "+className+"(InvocationHandler handler){"+r+</br>
+　　　　　　　　　　　　　　　　"        this.handler = handler;"+r+</br>
+　　　　　　　　　　　　　　　　"    }"+r;</br>
+　　　　　　　　for(Method method : methods){</br>
+　　　　　　　　　　　　fileContent += </br>
+　　　　　　　　　　　　　　　　"    public "+method.getReturnType().getName()+" "+</br>
+　　　　　　　　　　　　　　　　　　　　method.getName()+"(";</br>
+　　　　　　　　　　　　Parameter[] parameters = method.getParameters();</br>
+　　　　　　　　　　　　String args = "";</br>
+　　　　　　　　　　　　String argClasses = "";</br>
+　　　　　　　　　　　　for(int i=0; i&lt;parameters.length ;i++){</br>
+　　　　　　　　　　　　　　　　Class paramType = parameters[i].getType();</br>
+　　　　　　　　　　　　　　　　String paramName = parameters[i].getName();</br>
+　　　　　　　　　　　　　　　　argClasses += paramType+".class";</br>
+　　　　　　　　　　　　　　　　args += paramName;</br>
+　　　　　　　　　　　　　　　　fileContent += paramType + " "+ paramName;</br>
+　　　　　　　　　　　　　　　　if(i != (parameters.length-1)){</br>
+　　　　　　　　　　　　　　　　　　　　argClasses += ",";</br>
+　　　　　　　　　　　　　　　　　　　　args += ",";</br>
+　　　　　　　　　　　　　　　　　　　　fileContent += ",";</br>
+　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　fileContent += "){"+r;</br>
+　　　　　　　　　　　　String param2 = null;</br>
+　　　　　　　　　　　　String param3 = null;</br>
+　　　　　　　　　　　　if(args.equals("")){</br>
+　　　　　　　　　　　　　　　　param2 = interfaceClass.getCanonicalName()+</br>
+　　　　　　　　　　　　　　　　　　　　　　　　".class.getMethod(\""+method.getName()+"\")";</br>
+　　　　　　　　　　　　　　　　param3 = "null";</br>
+　　　　　　　　　　　　}else{</br>
+　　　　　　　　　　　　　　　　param2 = interfaceClass.getCanonicalName()+</br>
+　　　　　　　　　　　　　　　　　　　　　　　　".class.getMethod(\""+method.getName()+</br>
+　　　　　　　　　　　　　　　　　　　　　　　　"\","+argClasses+")";</br>
+　　　　　　　　　　　　　　　　fileContent += </br>
+　　　　　　　　　　　　　　　　"        Object[] objs={"+args+"};"+r;</br>
+　　　　　　　　　　　　　　　　param3 = "objs";</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　fileContent +=</br>
+　　　　　　　　　　　　　　　　"        Method method = null;"+r+</br>
+　　　　　　　　　　　　　　　　"        try{"+r+</br>
+　　　　　　　　　　　　　　　　"            method = "+param2+";"+r+</br>
+　　　　　　　　　　　　　　　　"        }catch(Exception e){e.printStackTrace();}"+r;</br>
+　　　　　　　　　　　　String returnStr = "";</br>
+　　　　　　　　　　　　if(method.getReturnType()==void.class){	</br>
+　　　　　　　　　　　　}else if(method.getReturnType()==int.class){</br>
+　　　　　　　　　　　　　　　　returnStr = "return (Integer)";</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　fileContent += </br>
+　　　　　　　　　　　　　　　　"        "+returnStr+" this.handler.invoke(this,method,"+param3+");"+r+</br>
+　　　　　　　　　　　　　　　　"    }"+r;</br>
+　　　　　　　　}</br>
+　　　　　　　　fileContent += "}";</br>
+　　　　　　　　File file = new File("F:/compiler/src/"+packageName.replace(".", "/")</br>
+　　　　　　　　　　　　　　　　　　　　　　　　+"/"+className+".java");</br>
+　　　　　　　　try{</br>
+　　　　　　　　　　　　file.getParentFile().mkdirs();</br>
+　　　　　　　　　　　　FileOutputStream fos = new FileOutputStream(file);</br>
+　　　　　　　　　　　　fos.write(fileContent.getBytes());</br>
+　　　　　　　　　　　　fos.close();</br>
+　　　　　　　　}catch(Exception e){</br>
+　　　　　　　　　　　　e.printStackTrace();</br>
+　　　　　　　　}</br>
+　　　　　　　　JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();</br>
+　　　　　　　　StandardJavaFileManager fileMgr = </br>
+　　　　　　　　　　　　　　　　compiler.getStandardFileManager(null, null, null);</br>
+　　　　　　　　Iterable units = fileMgr.getJavaFileObjects(file);</br>
+　　　　　　　　CompilationTask ct = compiler.getTask(null, fileMgr, null, null, null, units);</br>
+　　　　　　　　ct.call();</br>
+　　　　　　　　try {</br>
+　　　　　　　　　　　　fileMgr.close();</br>
+　　　　　　　　　　　　URL[] urls = new URL[] {new URL("file:/F:/compiler/src/")};</br>
+　　　　　　　　　　　　ClassLoader ul = new URLClassLoader(urls);</br>
+　　　　　　　　　　　　Class clazz = ul.loadClass(packageName+"."+className);</br>
+　　　　　　　　　　　　Constructor con = clazz.getConstructor(InvocationHandler.class);</br>
+　　　　　　　　　　　　return con.newInstance(handler);</br>
+　　　　　　　　} catch (Exception e) {</br>
+　　　　　　　　　　　　e.printStackTrace();</br>
+　　　　　　　　}</br>
+　　　　　　　　return null;</br>
+　　　　}	</br>
+　　　　public static void main(String[] args){</br>
+　　　　　　　　final Caculatable c = new Caculatable() {</br>
+　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　public void multiply() {</br>
+　　　　　　　　　　　　　　　　System.out.println("multiply");</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　public int add(int x, int y) {</br>
+　　　　　　　　　　　　　　　　return x+y;</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　};</br>
+　　　　　　　　Caculatable proxy=(Caculatable)Proxy.newProxyInstance(</br>
+　　　　　　　　　　　　Caculatable.class, </br>
+　　　　　　　　　　　　new InvocationHandler() {</br>
+　　　　　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　　　　　public Object invoke(Object proxy, Method method, Object[] args) {</br>
+　　　　　　　　　　　　　　　　　　　　try {</br>
+　　　　　　　　　　　　　　　　　　　　　　　　System.out.println("before proxy");</br>
+　　　　　　　　　　　　　　　　　　　　　　　　Object obj = method.invoke(c, args);</br>
+　　　　　　　　　　　　　　　　　　　　　　　　System.out.println("after proxy");</br>
+　　　　　　　　　　　　　　　　　　　　　　　　return obj;</br>
+　　　　　　　　　　　　　　　　　　　　} catch (Exception e) {</br>
+　　　　　　　　　　　　　　　　　　　　　　　　e.printStackTrace();</br>
+　　　　　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　　　　　return null;</br>
+　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　);</br>
+　　　　　　　　System.out.println(proxy.add(1, 2));</br>
+　　　　　　　　proxy.multiply();</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
