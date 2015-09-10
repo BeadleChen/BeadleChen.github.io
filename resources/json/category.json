@@ -23,6 +23,7 @@
 	"software":{
 		"title" : "软件编程",
 		"content":[	
+			{"article":"java_cglib","title":"CGLIB的介绍、原理和使用","date":"2015-09-10"},
 			{"article":"java_proxy_simulation","title":"Java代理的模拟","date":"2015-09-07"},
 			{"article":"java_classloader","title":"Java的类加载器运行原理","date":"2015-07-29"},
 			{"article":"http_protocol","title":"Http协议","date":"2015-07-29"},
