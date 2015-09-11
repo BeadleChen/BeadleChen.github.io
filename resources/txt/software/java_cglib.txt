@@ -21,176 +21,224 @@ WebShere应用服务器的事务管理适配器；Spring AOP，如果不强制�
 默认情况是使用JDK的动态代理来代理接口。
 </p>
 
-<h3>二、 CGLIB 代理的APIS</h3>
-
 <p>
-•net.sf.cglib.core</br>
-底层字节码处理类，他们大部分与ASM有关系。</br>
-• net.sf.cglib.transform</br>
-编译期或运行期类和类文件的转换</br>
-• net.sf.cglib.proxy</br>
-实现创建代理和方法拦截器的类</br>
-• net.sf.cglib.reflect</br>
-实现快速反射和C#风格代理的类</br>
-• net.sf.cglib.util</br>
-集合排序工具类</br>
-• net.sf.cglib.beans</br>
-JavaBean相关的工具类</br>
-
+CGLIB包的基本代码很少，但学起来有一定的困难，主要是缺少文档，API描述过于简单，</br>
+这也是开源软件的一个不足之处。目前CGLIB的版本是cglib-2.2.jar，主要由一下部分组成：</br>
+　　（1）net.sf.cglib.core：底层字节码处理类，他们大部分与ASM有关系。</br>
+　　（2）net.sf.cglib.transform：编译期或运行期类和类文件的转换。</br>
+　　（3）net.sf.cglib.proxy ：实现创建代理和方法拦截器的类。</br>
+　　（4）net.sf.cglib.reflect ：实现快速反射和C#风格代理的类。</br>
+　　（5）net.sf.cglib.util：集合排序工具类。</br>
+　　（6）net.sf.cglib.beans：JavaBean相关的工具类。</br>
+　　CGLIB包是在ASM之上的一个高级别的层。对代理那些没有实现接口的类非常有用。本质上，</br>
+它是通过动态的生成一个子类去覆盖所要代理类的不是final的方法，并设置好callback，</br>
+则原有类的每个方法调用就会转变成调用用户定义的拦截方法（interceptors），这比JDK动态</br>
+代理方法快多了。可见，Cglib的原理是对指定的目标类动态生成一个子类，并覆盖其中方法</br>
+实现增强，但因为采用的是继承，所以不能对final修饰的类和final方法进行代理。</br>
 </p>
 
-<p>
-本质上，它是通过动态的生成一个子类去覆盖所要代理类的不是final的方法，</br>
-并设置好callback，则原有类的每个方法调用就会转变成调用用户定义的拦截</br>
-方法（interceptors），这比 JDK动态代理方法快多了。
-</p>
+<h3>二、 Callback和CallbackFilter</h3>
 
 <p>
-Callback类型</br>
-• net.sf.cglib.proxy.FixedValue </br>
-为提高性能，FixedValue回调对强制某一特别方法返回固定值是有用的。</br>
-• net.sf.cglib.proxy.NoOp </br>
-NoOp回调把对方法调用直接委派到这个方法在父类中的实现。</br>
-• net.sf.cglib.proxy.LazyLoader </br>
+net.sf.cglib.proxy.Callback接口：在CGLIB包中是一个很关键的接口，</br>
+所有被net.sf.cglib.proxy.Enhancer类调用的回调（callback）接口都要继承这个接口</br>
+</p>
+
+<label>(1) MethodInterceptor</label></br>
+<p>
+最通用的回调（callback）类型，它经常被AOP用来实现拦截（intercept）方法的调用。这个接口只定义了一个方法。
+<div class="border_area">
+public Object intercept(</br>
+　　　　Object object, </br>
+　　　　java.lang.reflect.Method method, </br>
+　　　　Object[] args, </br>
+　　　　MethodProxy proxy</br>
+) throws Throwable;</br>
+</div>
+
+当net.sf.cglib.proxy.MethodInterceptor做为所有代理方法的回调 （callback）时，</br>
+当对基于代理的方法调用时，在调用原对象的方法的之前会调用这个方法。</br>
+第一个参数是代理对像，第二和第三个参数分别是拦截的方法和方法的参数。</br>
+通过调用net.sf.cglib.proxy.MethodProxy的invokeSuper方法来执行被</br>
+代理对象的方法。</br>
+</p>
+
+<label>(2) FixedValue</label></br>
+<p>
+为提高性能，FixedValue回调对强制某一特别方法返回固定值是有用的。
+</p>
+
+<label>(3) NoOp</label></br>
+<p>
+其中NoOp.INSTANCE是CGlib所提供的实际是一个没有任何操作的拦截器。
+</p>
+
+<label>(4) LazyLoader</label></br>
+<p>
 当实际的对象需要延迟装载时，可以使用LazyLoader回调。</br>
 一旦实际对象被装载，它将被每一个调用代理对象的方法使用。</br>
-• net.sf.cglib.proxy.Dispatcher </br>
+
+<div class="border_area">
+new LazyLoader() {</br>
+　　　　@Override</br>
+　　　　public Object loadObject() throws Exception {</br>
+　　　　　　　　System.out.println("beadle2");</br>
+　　　　　　　　//返回真正实例对象</br>
+　　　　　　　　return new TestService();</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
+
+<label>(5) Dispatcher</label></br>
+<p>
 Dispathcer回调和LazyLoader回调有相同的特点，</br>
 不同的是，当代理方法被调用时，装载对象的方法也总要被调用。</br>
-• net.sf.cglib.proxy.ProxyRefDispatcher </br>
+</p>
+
+<label>(6) ProxyRefDispatcher</label></br>
+<p>
 ProxyRefDispatcher回调和Dispatcher一样，</br>
 不同的是，它可以把代理对象作为装载对象方法的一个参数传递。</br>
 </p>
 
-<h3>二、 简单模拟Proxy.newProxyInstance()生成代理对象</h3>
 
-<p>
-原理:通过传递过来的Interface的Class对象，模拟生成代理对象的java文件字符串，</br>
-通过在本地生成文件，并使用Java自带Compiler进行编译，用类加载器进行加载并实例化代理对象。</br>
-</p>
+
+<h3>三、 CGLIB的基本使用</h3>
+
+<label>(1) 创建一个简单的代理</label></br>
 <p>
 <div class="border_area">
-public class Proxy {</br>
-　　　　public static Object newProxyInstance(Class interfaceClass,InvocationHandler handler){</br>
-　　　　　　　　Method[] methods = interfaceClass.getMethods();</br>
-　　　　　　　　String packageName = Proxy.class.getPackage().getName();</br>
-　　　　　　　　String className = "$Proxy0";</br>
-　　　　　　　　String r = "\r";</br>
-　　　　　　　　String fileContent = "package "+packageName+";"+r+</br>
-　　　　　　　　　　　　　　　　"import java.lang.reflect.Method;"+r+r+</br>
-　　　　　　　　　　　　　　　　"public class "+className+" implements "+</br>
-　　　　　　　　　　　　　　　　　　　　interfaceClass.getCanonicalName() + "{"+r+</br>
-　　　　　　　　　　　　　　　　"    private InvocationHandler handler;"+r+</br>
-　　　　　　　　　　　　　　　　"    public "+className+"(InvocationHandler handler){"+r+</br>
-　　　　　　　　　　　　　　　　"        this.handler = handler;"+r+</br>
-　　　　　　　　　　　　　　　　"    }"+r;</br>
-　　　　　　　　for(Method method : methods){</br>
-　　　　　　　　　　　　fileContent += </br>
-　　　　　　　　　　　　　　　　"    public "+method.getReturnType().getName()+" "+</br>
-　　　　　　　　　　　　　　　　　　　　method.getName()+"(";</br>
-　　　　　　　　　　　　Parameter[] parameters = method.getParameters();</br>
-　　　　　　　　　　　　String args = "";</br>
-　　　　　　　　　　　　String argClasses = "";</br>
-　　　　　　　　　　　　for(int i=0; i&lt;parameters.length ;i++){</br>
-　　　　　　　　　　　　　　　　Class paramType = parameters[i].getType();</br>
-　　　　　　　　　　　　　　　　String paramName = parameters[i].getName();</br>
-　　　　　　　　　　　　　　　　argClasses += paramType+".class";</br>
-　　　　　　　　　　　　　　　　args += paramName;</br>
-　　　　　　　　　　　　　　　　fileContent += paramType + " "+ paramName;</br>
-　　　　　　　　　　　　　　　　if(i != (parameters.length-1)){</br>
-　　　　　　　　　　　　　　　　　　　　argClasses += ",";</br>
-　　　　　　　　　　　　　　　　　　　　args += ",";</br>
-　　　　　　　　　　　　　　　　　　　　fileContent += ",";</br>
-　　　　　　　　　　　　　　　　}</br>
-　　　　　　　　　　　　}</br>
-　　　　　　　　　　　　fileContent += "){"+r;</br>
-　　　　　　　　　　　　String param2 = null;</br>
-　　　　　　　　　　　　String param3 = null;</br>
-　　　　　　　　　　　　if(args.equals("")){</br>
-　　　　　　　　　　　　　　　　param2 = interfaceClass.getCanonicalName()+</br>
-　　　　　　　　　　　　　　　　　　　　　　　　".class.getMethod(\""+method.getName()+"\")";</br>
-　　　　　　　　　　　　　　　　param3 = "null";</br>
-　　　　　　　　　　　　}else{</br>
-　　　　　　　　　　　　　　　　param2 = interfaceClass.getCanonicalName()+</br>
-　　　　　　　　　　　　　　　　　　　　　　　　".class.getMethod(\""+method.getName()+</br>
-　　　　　　　　　　　　　　　　　　　　　　　　"\","+argClasses+")";</br>
-　　　　　　　　　　　　　　　　fileContent += </br>
-　　　　　　　　　　　　　　　　"        Object[] objs={"+args+"};"+r;</br>
-　　　　　　　　　　　　　　　　param3 = "objs";</br>
-　　　　　　　　　　　　}</br>
-　　　　　　　　　　　　fileContent +=</br>
-　　　　　　　　　　　　　　　　"        Method method = null;"+r+</br>
-　　　　　　　　　　　　　　　　"        try{"+r+</br>
-　　　　　　　　　　　　　　　　"            method = "+param2+";"+r+</br>
-　　　　　　　　　　　　　　　　"        }catch(Exception e){e.printStackTrace();}"+r;</br>
-　　　　　　　　　　　　String returnStr = "";</br>
-　　　　　　　　　　　　if(method.getReturnType()==void.class){	</br>
-　　　　　　　　　　　　}else if(method.getReturnType()==int.class){</br>
-　　　　　　　　　　　　　　　　returnStr = "return (Integer)";</br>
-　　　　　　　　　　　　}</br>
-　　　　　　　　　　　　fileContent += </br>
-　　　　　　　　　　　　　　　　"        "+returnStr+" this.handler.invoke(this,method,"+param3+");"+r+</br>
-　　　　　　　　　　　　　　　　"    }"+r;</br>
-　　　　　　　　}</br>
-　　　　　　　　fileContent += "}";</br>
-　　　　　　　　File file = new File("F:/compiler/src/"+packageName.replace(".", "/")</br>
-　　　　　　　　　　　　　　　　　　　　　　　　+"/"+className+".java");</br>
-　　　　　　　　try{</br>
-　　　　　　　　　　　　file.getParentFile().mkdirs();</br>
-　　　　　　　　　　　　FileOutputStream fos = new FileOutputStream(file);</br>
-　　　　　　　　　　　　fos.write(fileContent.getBytes());</br>
-　　　　　　　　　　　　fos.close();</br>
-　　　　　　　　}catch(Exception e){</br>
-　　　　　　　　　　　　e.printStackTrace();</br>
-　　　　　　　　}</br>
-　　　　　　　　JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();</br>
-　　　　　　　　StandardJavaFileManager fileMgr = </br>
-　　　　　　　　　　　　　　　　compiler.getStandardFileManager(null, null, null);</br>
-　　　　　　　　Iterable units = fileMgr.getJavaFileObjects(file);</br>
-　　　　　　　　CompilationTask ct = compiler.getTask(null, fileMgr, null, null, null, units);</br>
-　　　　　　　　ct.call();</br>
-　　　　　　　　try {</br>
-　　　　　　　　　　　　fileMgr.close();</br>
-　　　　　　　　　　　　URL[] urls = new URL[] {new URL("file:/F:/compiler/src/")};</br>
-　　　　　　　　　　　　ClassLoader ul = new URLClassLoader(urls);</br>
-　　　　　　　　　　　　Class clazz = ul.loadClass(packageName+"."+className);</br>
-　　　　　　　　　　　　Constructor con = clazz.getConstructor(InvocationHandler.class);</br>
-　　　　　　　　　　　　return con.newInstance(handler);</br>
-　　　　　　　　} catch (Exception e) {</br>
-　　　　　　　　　　　　e.printStackTrace();</br>
-　　　　　　　　}</br>
-　　　　　　　　return null;</br>
-　　　　}	</br>
+public class Client {</br>
 　　　　public static void main(String[] args){</br>
-　　　　　　　　final Caculatable c = new Caculatable() {</br>
+　　　　　　　　Enhancer en = new Enhancer();</br>
+　　　　　　　　en.setSuperclass(TestService.class);</br>
+　　　　　　　　en.setCallback(new MethodInterceptor() {</br>
 　　　　　　　　　　　　@Override</br>
-　　　　　　　　　　　　public void multiply() {</br>
-　　　　　　　　　　　　　　　　System.out.println("multiply");</br>
+　　　　　　　　　　　　public Object intercept(Object obj, Method method, Object[] args,</br>
+　　　　　　　　　　　　　　　　　　　　MethodProxy proxy) throws Throwable {</br>
+　　　　　　　　　　　　　　　　System.out.println("before method");</br>
+　　　　　　　　　　　　　　　　Object result = proxy.invokeSuper(obj, args);</br>
+　　　　　　　　　　　　　　　　System.out.println("before method");</br>
+　　　　　　　　　　　　　　　　return result;</br>
 　　　　　　　　　　　　}</br>
-　　　　　　　　　　　　@Override</br>
-　　　　　　　　　　　　public int add(int x, int y) {</br>
-　　　　　　　　　　　　　　　　return x+y;</br>
-　　　　　　　　　　　　}</br>
-　　　　　　　　};</br>
-　　　　　　　　Caculatable proxy=(Caculatable)Proxy.newProxyInstance(</br>
-　　　　　　　　　　　　Caculatable.class, </br>
-　　　　　　　　　　　　new InvocationHandler() {</br>
+　　　　　　　　});</br>
+　　　　　　　　TestService ts = (TestService)en.create();</br>
+　　　　　　　　ts.test1();</br>
+　　　　　　　　ts.test2();</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
+
+<label>(2) 使用MethodInterceptor创建一个代理</label></br>
+<p>
+<div class="border_area">
+public class Client {</br>
+　　　　public static void main(String[] args){</br>
+　　　　　　　　Enhancer en = new Enhancer();</br>
+　　　　　　　　en.setSuperclass(TestService.class);</br>
+　　　　　　　　en.setCallback(</br>
+　　　　　　　　　　　　new MethodInterceptor() {</br>
 　　　　　　　　　　　　　　　　@Override</br>
-　　　　　　　　　　　　　　　　public Object invoke(Object proxy, Method method, Object[] args) {</br>
-　　　　　　　　　　　　　　　　　　　　try {</br>
-　　　　　　　　　　　　　　　　　　　　　　　　System.out.println("before proxy");</br>
-　　　　　　　　　　　　　　　　　　　　　　　　Object obj = method.invoke(c, args);</br>
-　　　　　　　　　　　　　　　　　　　　　　　　System.out.println("after proxy");</br>
-　　　　　　　　　　　　　　　　　　　　　　　　return obj;</br>
-　　　　　　　　　　　　　　　　　　　　} catch (Exception e) {</br>
-　　　　　　　　　　　　　　　　　　　　　　　　e.printStackTrace();</br>
-　　　　　　　　　　　　　　　　　　　　}</br>
-　　　　　　　　　　　　　　　　return null;</br>
+　　　　　　　　　　　　　　　　public Object intercept(</br>
+　　　　　　　　　　　　　　　　　　　　　　　　Object obj,</br>
+　　　　　　　　　　　　　　　　　　　　　　　　Method method, </br>
+　　　　　　　　　　　　　　　　　　　　　　　　Object[] args,</br>
+　　　　　　　　　　　　　　　　　　　　　　　　MethodProxy proxy</br>
+　　　　　　　　　　　　　　　　　　　　) throws Throwable {</br>
+　　　　　　　　　　　　　　　　　　　　System.out.println("before method");</br>
+　　　　　　　　　　　　　　　　　　　　Object result = proxy.invokeSuper(obj, args);</br>
+　　　　　　　　　　　　　　　　　　　　System.out.println("before method");</br>
+　　　　　　　　　　　　　　　　　　　　return result;</br>
 　　　　　　　　　　　　　　　　}</br>
 　　　　　　　　　　　　}</br>
 　　　　　　　　);</br>
-　　　　　　　　System.out.println(proxy.add(1, 2));</br>
-　　　　　　　　proxy.multiply();</br>
+　　　　　　　　TestService ts = (TestService)en.create();</br>
+　　　　　　　　ts.test1();</br>
+　　　　　　　　System.out.println(ts.test2());</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
+
+<label>(3) 使用CallbackFilter在方法层设置回调</label></br>
+<p>
+<div class="border_area">
+public class Client {</br>
+　　　　public static void main(String[] args){</br>
+　　　　　　　　Enhancer en = new Enhancer();</br>
+　　　　　　　　en.setSuperclass(TestService.class);</br>
+　　　　　　　　en.setCallbacks(new Callback[]{</br>
+　　　　　　　　　　　　new MethodInterceptor() {</br>
+　　　　　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　　　　　public Object intercept(</br>
+　　　　　　　　　　　　　　　　　　　　　　　　Object obj, </br>
+　　　　　　　　　　　　　　　　　　　　　　　　Method method, </br>
+　　　　　　　　　　　　　　　　　　　　　　　　Object[] args,</br>
+　　　　　　　　　　　　　　　　　　　　　　　　MethodProxy proxy) throws Throwable {</br>
+　　　　　　　　　　　　　　　　　　　　System.out.println("before method");</br>
+　　　　　　　　　　　　　　　　　　　　Object result = proxy.invokeSuper(obj, args);</br>
+　　　　　　　　　　　　　　　　　　　　System.out.println("before method");</br>
+　　　　　　　　　　　　　　　　　　　　return result;</br>
+　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　},</br>
+　　　　　　　　　　　　NoOp.INSTANCE</br>
+　　　　　　　　});</br>
+　　　　　　　　en.setCallbackFilter(new CallbackFilter() {</br>
+　　　　　　　　　　　　@Override</br>
+　　　　　　　　　　　　public int accept(Method method) {</br>
+　　　　　　　　　　　　　　　　if(method.getName().equals("test1")){</br>
+　　　　　　　　　　　　　　　　　　　　return 0;</br>
+　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　　　　　return 1;</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　});</br>
+　　　　　　　　System.out.println();</br>
+　　　　　　　　TestService ts = (TestService)en.create();</br>
+　　　　　　　　ts.test1();</br>
+　　　　　　　　System.out.println(ts.test2());</br>
+　　　　}</br>
+}</br>
+</div>
+</p>
+
+<label>(4) 使用Mixin</label></br>
+<p>
+Mixin通过代理方式将多种类型的对象绑定到一个大对象上，这样对各个</br>
+目标类型中的方法调用可以直接在这个大对象上进行。下面是一个例子。</br>
+<div class="border_area">
+interface MyInterfaceA {</br>
+　　　　public void methodA();</br>
+}</br>
+interface MyInterfaceB {</br>
+　　　　public void methodB();</br>
+}</br>
+class MyInterfaceAImpl implements MyInterfaceA {</br>
+　　　　@Override</br>
+　　　　public void methodA() {</br>
+　　　　　　　　System.out.println("MyInterfaceAImpl.methodA()");</br>
+　　　　}</br>
+}</br>
+class MyInterfaceBImpl implements MyInterfaceB {</br>
+　　　　@Override</br>
+　　　　public void methodB() {</br>
+　　　　　　　　System.out.println("MyInterfaceBImpl.methodB()");</br>
+　　　　}</br>
+}</br>
+public class Main {</br>
+　　　　public static void main(String[] args) {</br>
+　　　　　　　　// 各个对象对应的类型</br>
+　　　　　　　　Class[] interfaces = new Class[] { MyInterfaceA.class,</br>
+　　　　　　　　　　　　　　　　MyInterfaceB.class };</br>
+　　　　　　　　// 各个对象</br>
+　　　　　　　　Object[] delegates = new Object[] { new MyInterfaceAImpl(),</br>
+　　　　　　　　　　　　　　　　new MyInterfaceBImpl() };</br>
+　　　　　　　　// 将多个对象绑定到一个大对象上</br>
+　　　　　　　　Object obj = Mixin.create(interfaces, delegates);</br>
+　　　　　　　　// 直接在大对象上调用各个目标方法</br>
+　　　　　　　　((MyInterfaceA) obj).methodA();</br>
+　　　　　　　　((MyInterfaceB) obj).methodB();</br>
 　　　　}</br>
 }</br>
 </div>
