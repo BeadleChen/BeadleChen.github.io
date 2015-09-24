@@ -1,0 +1,119 @@
+<h3>一、 注解介绍</h3>
+
+<p>
+　　注解早在J2SE1.5就被引入到Java中，主要提供一种机制，这种机制允许程序员</br>
+在编写代码的同时可以直接编写元数据。在引入注解之前，程序员们描述其代码的</br>
+形式尚未标准化，每个人的做法各异：transient关键字、注释、接口等。这显然</br>
+不是一种优雅的方式，随之而来的一种崭新的记录元数据的形式——注解被引入到Java中。</br>
+其它因素也促成了这个决定：当时不同类型的应用程序使用XML作为标准的代码配置机制，</br>
+这其实并不是最佳方式，因为代码和XML的解耦以及未来对这种解耦应用的维护并不低廉。</br>
+另外，由于非保留字的使用，例如“@deprecated”自从Java1.4便开始在Java文档中使用。</br>
+我非常确定这是一个现在在注解中使用“@”原因。</br>
+</p>
+
+
+<h3>二、 简单自定义注解</h3>
+
+<p>
+<div class="border_area">
+@Retention(RetentionPolicy.RUNTIME)</br>
+@Target(ElementType.TYPE)</br>
+public @interface Assignment {</br>
+　　　　String assignee();</br>
+　　　　int effort();</br>
+　　　　double finished() default 0;</br>
+}
+</div>
+
+<p>
+@Target说明了Annotation所修饰的对象范围：</br>
+Annotation可被用于 packages、types（类、接口、枚举、Annotation类型）、</br>
+类型成员（方法、构造方法、成员变量、枚举值）、方法参数和本地变量（如循环变量、catch参数）。</br>
+在Annotation类型的声明中使用了target可更加明晰其修饰的目标。</br>
+作用：用于描述注解的使用范围（即：被描述的注解可以用在什么地方）</br>
+取值(ElementType)有：</br>
+　　　　1.TYPE</br>
+　　　　　　　　用于描述类、接口(包括注解类型) 或enum声明</br>
+　　　　　　　　(Class, interface (including annotation type), or enum declaration)</br>
+　　　　2.FIELD</br>
+　　　　　　　　用于描述域</br>
+　　　　　　　　Field declaration (includes enum constants)</br>
+　　　　3.METHOD</br>
+　　　　　　　　用于描述方法</br>
+　　　　　　　　Method declaration</br>
+　　　　4.PARAMETER</br>
+　　　　　　　　用于描述参数</br>
+　　　　　　　　Formal parameter declaration</br>
+　　　　5.CONSTRUCTOR</br>
+　　　　　　　　用于描述构造器</br>
+　　　　　　　　Constructor declaration</br>
+　　　　6.LOCAL_VARIABLE</br>
+　　　　　　　　用于描述局部变量</br>
+　　　　　　　　Local variable declaration</br>
+　　　　7.ANNOTATION_TYPE</br>
+　　　　　　　　用于描述注解类型</br>
+　　　　　　　　Annotation type declaration</br>
+　　　　8.PACKAGE</br>
+　　　　　　　　用于描述包(Package declaration)</br>
+　　　　9.TYPE_PARAMETER(1.8)</br>
+　　　　　　　　用于描述类型参数</br>
+　　　　　　　　Type parameter declaration</br>
+　　　　10.TYPE_USE(1.8)</br>
+　　　　　　　　Use of a type</br>
+</p>
+
+<p>
+@Retention定义了该Annotation被保留的时间长短：</br>
+某些Annotation仅出现在源代码中，而被编译器丢弃；</br>
+而另一些却被编译在class文件中,编译在class文件中的Annotation可能会被虚拟机忽略;</br>
+而另一些在class被装载时将被读取（请注意并不影响class的执行，因为Annotation与class在使用上是被分离的）。</br>
+使用这个meta-Annotation可以对 Annotation的“生命周期”限制。</br>
+作用：表示需要在什么级别保存该注释信息，用于描述注解的生命周期（即：被描述的注解在什么范围内有效）</br>
+取值（RetentionPoicy）有：</br>
+　　　　1.SOURCE:在源文件中有效（即源文件保留）</br>
+　　　　2.CLASS:在class文件中有效（即class保留）</br>
+　　　　3.RUNTIME:在运行时有效（即运行时保留）</br>
+验证SOURCE和CLASS的区别，在注解中随意输入长串字符串(注解中带有String的方法)。</br>
+当注解的RetentionPoicy为SOURCE和CLASS时，可以看到生成的.class文件大小不一样。</br>
+同样，我们可以通过反射的方式，获取注解信息，这种方式只有注解是RUNTIME的时候才能获取到。</br>
+</p>
+
+<p>
+@Documented用于描述其它类型的annotation应该被作为被标注的程序成员的公共API，</br>
+因此可以被例如javadoc此类的工具文档化。Documented是一个标记注解，没有成员</br>
+</p>
+
+<p>
+@Inherited 元注解是一个标记注解，@Inherited阐述了某个被标注的类型是被继承的。</br>
+如果一个使用了@Inherited修饰的annotation类型被用于一个class，则这个annotation</br>
+将被用于该class的子类。注意：@Inherited annotation类型是被标注过的class的子类所继承。</br>
+类并不从它所实现的接口继承annotation，方法并不从它所重载的方法继承annotation。</br>
+当@Inherited annotation类型标注的annotation的Retention是RetentionPolicy.RUNTIME，</br>
+则反射API增强了这种继承性。如果我们使用java.lang.reflect去查询一个@Inherited annotation类型</br>
+的annotation时，反射代码检查将展开工作：检查class和其父类，</br>
+直到发现指定的annotation类型被发现，或者到达类继承结构的顶层。</br>
+</p>
+
+<h3>三、 注解类型的参数定义</h3>
+
+<label>3.1 Annotation类型里面的参数设定</label></br>
+<p>
+
+　　(1)只能用public或默认(default)这两个访问权修饰.</br>
+　　　　例如,String value();这里把方法设为defaul默认类型；</br>
+　　(2)参数成员只能用基本类型byte,short,char,int,long,float,double,boolean八种基本数据类型</br>
+　　　　和 String,Enum,Class,annotations等数据类型,以及这一些类型的数组.</br>
+　　　　例如,String value();这里的参数成员就为String;</br>
+　　(3)如果只有一个参数成员,最好把参数名称设为"value",后加小括号.</br>
+　　　　例:下面的例子FruitName注解就只有一个参数成员</br>
+</p>
+
+<label>3.2 注解元素的默认值</label></br>
+<p>
+注解元素必须有确定的值，要么在定义注解的默认值中指定，要么在使用注解时指定，</br>
+非基本类型的注解元素的值不可为null。因此, 使用空字符串或0作为默认值是一种</br>
+常用的做法。这个约束使得处理器很难表现一个元素的存在或缺失的状态，因为每个</br>
+注解的声明中，所有元素都存在，并且都具有相应的值，为了绕开这个约束，我们</br>
+只能定义一些特殊的值，例如空字符串或者负数，一次表示某个元素不存在，</br>
+在定义注解时，这已经成为一个习惯用法。</br>
+</p>

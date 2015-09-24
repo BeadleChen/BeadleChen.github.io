@@ -1,0 +1,103 @@
+<h3>一、 APT介绍</h3>
+
+<p>
+　　APT(Annotation processing tool)是一种处理注释的工具,它对源代码文件进行</br>
+检测找出其中的Annotation，使用Annotation进行额外的处理。</br>
+　　Annotation处理器在处理Annotation时可以根据源文件中的Annotation生成额外</br>
+的源文件和其它的文件(文件具体内容由Annotation处理器的编写者决定),APT还会</br>
+编译生成的源文件和原来的源文件，将它们一起生成class文件.</br>
+　　使用APT主要的目的是简化开发者的工作量，因为APT可以编译程序源代码的同时，</br>
+生成一些附属文件(比如源文件，类文件，程序发布描述文件等)，这些附属文件的内容</br>
+也都是与源代码相关的，换句话说，使用APT可以代替传统的对代码信息和附属文件的维护工作。</br>
+</p>
+
+<p>
+APT只有java1.5到java1.7的版本之间提供，而且1.7已经反对使用。</br>
+在java1.8中，在bin文件下已没有apt.exe,且tools包中已没有com.sun.mirror包</br>
+因此此运行环境应该在1.7版本中运行，且项目中需要导入tools.jar.</br>
+</p>
+
+<h3>二、 注解、注解处理器、注解处理器工厂</h3>
+
+<p>
+注解Assignment:</br>
+<div class="border_area">
+@Retention(RetentionPolicy.RUNTIME)</br>
+@Target(ElementType.TYPE)</br>
+public @interface Assignment {</br>
+　　　　String assignee();</br>
+　　　　int effort();</br>
+　　　　double finished() default 0;</br>
+}
+</div>
+注解对象Main:</br>
+<div class="border_area">
+@Assignment(assignee="annotationOne",effort=2)</br>
+public class Main {</br>	
+　　　　@Assignment(assignee="annotationTwo",effort=3)</br>
+　　　　public void hello(){</br>
+　　　　　　　　System.out.println("beadle");</br>
+　　　　}</br>	
+}</br>
+</div>
+注解处理器工厂AssignmentApf:</br>
+<div class="border_area">
+public class AssignmentApf implements AnnotationProcessorFactory{</br>
+　　　　public AnnotationProcessor getProcessorFor(</br>
+　　　　　　　　　　　　Set&lt;AnnotationTypeDeclaration&gt atds,</br>
+　　　　　　　　　　　　AnnotationProcessorEnvironment env) {</br>
+　　　　　　　　return new AssignmentAp(env); </br>
+　　　　} </br>
+　　　　public Collection&lt;String&gt supportedAnnotationTypes() {</br>
+　　　　　　　　return Arrays.asList("org.beadle.test.Assignment");</br>
+　　　　}</br>
+　　　　public Collection&lt;String&gt supportedOptions() {</br>
+　　　　　　　　return Collections.emptySet();</br>
+　　　　}</br>
+}</br>
+</div>
+
+注解处理器AssignmentAp:</br>
+<div class="border_area">
+public class AssignmentAp implements AnnotationProcessor {</br>
+　　　　private AnnotationProcessorEnvironment env;</br>
+　　　　private AnnotationTypeDeclaration assignmentDeclaration;</br>
+　　　　public AssignmentAp(AnnotationProcessorEnvironment env) {</br>
+　　　　　　　　this.env = env;</br>
+　　　　　　　　assignmentDeclaration = (AnnotationTypeDeclaration) env</br>
+　　　　　　　　　　　　　　　　.getTypeDeclaration("org.beadle.test.Assignment");</br>
+　　　　}</br>
+　　　　public void process() {</br>
+　　　　　　　　System.out.println("process"); </br>
+　　　　　　　　Collection&lt;Declaration&gt; declarations = env</br>
+　　　　　　　　　　　　　　　　.getDeclarationsAnnotatedWith(assignmentDeclaration);</br>
+　　　　　　　　System.out.println(declarations.size());</br>
+　　　　　　　　for (Declaration declaration : declarations) {</br>
+　　　　　　　　processAssignmentAnnotations(declaration);</br>
+　　　　　　　　}</br>
+　　　　}</br>
+　　　　private void processAssignmentAnnotations(Declaration declaration)</br>
+　　　　　　　　{</br>
+　　　　　　　　Collection&lt;AnnotationMirror&gt; annotations =</br>
+　　　　　　　　declaration.getAnnotationMirrors();</br>
+　　　　　　　　for (AnnotationMirror mirror : annotations) {</br>
+　　　　　　　　　　　　if(mirror.getAnnotationType()</br>
+　　　　　　　　　　　　　　　　.getDeclaration().equals(assignmentDeclaration)</br>
+　　　　　　　　　　　　　　　　) {</br>
+　　　　　　　　　　　　　　　　Map values = mirror.getElementValues();</br>
+　　　　　　　　　　　　　　　　Iterator it = values.entrySet().iterator();</br>
+　　　　　　　　　　　　　　　　while(it.hasNext()){</br>
+　　　　　　　　　　　　　　　　　　　　System.out.println(it.next());</br>
+　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　}</br>
+　　　　}</br>
+}</br>
+</div>
+
+<h3>三、 使用APT命令处理Main</h3>
+
+<p>
+将JAVA_HOME设置为jdk1.7版本，运行cmd。将目录跳转到Main.java项目的bin目录下。</br>
+运行命令apt -factory org.beadle.test.AssignmentApf ../src/org/beadle/test/Main.java</br>
+</p>
