@@ -1,0 +1,85 @@
+<h3>一、 注解处理器介绍</h3>
+
+<p>
+　　在1.5版本的时候，通常使用APT来对注解进行处理。在之后的版本，</br>
+通常建议使用javac -processor的命令来处理注解。这里的注解一般是</br>
+RetentionPolicy.SOURCE。在编译之后是没有在.class文件中，但可以</br>
+通过我们自定义的注解处理器来对标记的注解进行相应的处理。</br>
+</p>
+
+
+<h3>二、 注解处理器AssignmentProcess</h3>
+
+<p>
+注解Assignment:</br>
+<div class="border_area">
+@Retention(RetentionPolicy.RUNTIME)</br>
+@Target(ElementType.TYPE)</br>
+public @interface Assignment {</br>
+　　　　String assignee();</br>
+　　　　int effort();</br>
+　　　　double finished() default 0;</br>
+}
+</div>
+注解对象Main:</br>
+<div class="border_area">
+@Assignment(assignee="annotationOne",effort=2)</br>
+public class Main {</br>	
+　　　　@Assignment(assignee="annotationTwo",effort=3)</br>
+　　　　public void hello(){</br>
+　　　　　　　　System.out.println("beadle");</br>
+　　　　}</br>	
+}</br>
+</div>
+
+
+注解处理器AssignmentProcess:</br>
+<div class="border_area">
+@SupportedAnnotationTypes("org.beadle.test.Assignment")</br>
+public class AssignmentProcess extends AbstractProcessor{</br>
+　　　　private TypeElement assignmentElement;</br>
+　　　　public synchronized void init(ProcessingEnvironment processingEnv)</br>
+　　　　{</br>
+　　　　　　　　super.init(processingEnv);</br>
+　　　　　　　　Elements elementUtils = processingEnv.getElementUtils();</br>
+　　　　　　　　assignmentElement =</br>
+　　　　　　　　　　　　elementUtils.getTypeElement("org.beadle.test.Assignment");</br>
+　　　　}</br>
+　　　　private void processAssignment(Element element) {</br>
+　　　　　　　　List&lt;? extends AnnotationMirror&gt; annotations =</br>
+　　　　　　　　　　　　　　　　　　　　element.getAnnotationMirrors();</br>
+　　　　　　　　for (AnnotationMirror mirror : annotations) {</br>
+　　　　　　　　　　　　if(mirror.getAnnotationType().asElement().equals(assignmentElement)) {</br>
+　　　　　　　　　　　　　　　　Map&lt;? extends ExecutableElement, ? extends</br>
+　　　　　　　　　　　　　　　　AnnotationValue&gt</br>
+　　　　　　　　　　　　　　　　　　　　values = mirror.getElementValues();</br>
+　　　　　　　　　　　　　　　　Iterator it = values.entrySet().iterator();</br>
+　　　　　　　　　　　　　　　　while(it.hasNext()){</br>
+　　　　　　　　　　　　　　　　　　　　System.out.println(it.next());</br>
+　　　　　　　　　　　　　　　　}</br>
+　　　　　　　　　　　　}</br>
+　　　　　　　　}</br>
+　　　　}</br>
+　　　　@Override</br>
+　　　　public boolean process(Set&lt;? extends TypeElement&gt; annotations</br>
+　　　　　　　　,RoundEnvironment roundEnv) {</br>
+　　　　　　　　Set&lt;? extends Element&gt; elements =</br>
+　　　　　　　　　　　　　　　　roundEnv.getElementsAnnotatedWith(assignmentElement);</br>
+　　　　　　　　for (Element element : elements) {</br>
+　　　　　　　　　　　　processAssignment(element);</br>
+　　　　　　　　}</br>
+　　　　　　　　return false;</br>
+　　　　}</br>
+　　　　@Override</br>
+　　　　public SourceVersion getSupportedSourceVersion() {</br>
+　　　　　　　　return SourceVersion.latestSupported();</br>
+　　　　}</br>
+}</br>
+</div>
+
+<h3>三、 使用javac命令处理Main</h3>
+
+<p>
+运行cmd,将目录跳转到Main.java项目的bin目录下。</br>
+运行命令javac -processor org.beadle.test2.AssignmentProcess ../src/org/beadle/test/Main.java</br>
+</p>

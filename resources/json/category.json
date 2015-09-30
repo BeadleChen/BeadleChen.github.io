@@ -23,6 +23,7 @@
 	"software":{
 		"title" : "软件编程",
 		"content":[	
+			{"article":"java_annotation3","title":"Java注解(三)--注解处理器的使用","date":"2015-09-28"},
 			{"article":"java_annotation2","title":"Java注解(二)--APT的使用","date":"2015-09-24"},
 			{"article":"java_annotation1","title":"Java注解(一)","date":"2015-09-24"},
 			{"article":"java_cglib","title":"CGLIB的介绍、原理和使用","date":"2015-09-10"},
@@ -36,7 +37,6 @@
 			{"article":"encode","title":"计算机编码世界(一)","date":"2015-07-10"},
 			{"article":"encode2","title":"计算机编码世界(二)","date":"2015-07-17"},
 			{"article":"encode3","title":"计算机编码世界(三)","date":"2015-07-21"}
-
 		]
 	}
 	,
