@@ -23,6 +23,7 @@
 	"software":{
 		"title" : "软件编程",
 		"content":[	
+			{"article":"vpn_setup","title":"VPN的搭建","date":"2015-10-14"},
 			{"article":"java_annotation3","title":"Java注解(三)--注解处理器的使用","date":"2015-09-28"},
 			{"article":"java_annotation2","title":"Java注解(二)--APT的使用","date":"2015-09-24"},
 			{"article":"java_annotation1","title":"Java注解(一)","date":"2015-09-24"},
