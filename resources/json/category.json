@@ -2,6 +2,7 @@
 	"life":{
 		"title" : "生活随笔",
 		"content":[
+			{"article":"enjoy_your_trouble","title":"享受你的烦恼","date":"2015-11-06"},
 			{"article":"a_letter_to_teacher","title":"恩师表","date":"2015-09-09"},
 			{"article":"life","title":"生活小记","date":"2015-07-08"},
 			{"article":"my_game_life","title":"我的游戏人生","date":"2015-08-27"},
@@ -23,6 +24,7 @@
 	"software":{
 		"title" : "软件编程",
 		"content":[	
+			{"article":"noun_interpretation","title":"JAVA相关名词解释","date":"2015-11-06"},
 			{"article":"vpn_setup","title":"VPN的搭建","date":"2015-10-14"},
 			{"article":"java_annotation3","title":"Java注解(三)--注解处理器的使用","date":"2015-09-28"},
 			{"article":"java_annotation2","title":"Java注解(二)--APT的使用","date":"2015-09-24"},
@@ -38,6 +40,13 @@
 			{"article":"encode","title":"计算机编码世界(一)","date":"2015-07-10"},
 			{"article":"encode2","title":"计算机编码世界(二)","date":"2015-07-17"},
 			{"article":"encode3","title":"计算机编码世界(三)","date":"2015-07-21"}
+		]
+	}
+	,
+	"internet":{
+		"title" : "计算机网络",
+		"content":[
+			{"article":"address","title":"互联网IP地址","date":"2015-10-14"}
 		]
 	}
 	,

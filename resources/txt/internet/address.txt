@@ -1,0 +1,91 @@
+<p>
+IP地址长32 bit。Internet地址并不采用平面形式的地址空间，如1、2、3等。</br>
+IP地址具有一定的结构，五类不同的互联网地址格式如</br>
+A类: 0      [7位网络号] [24位主机号]</br>
+B类: 10     [14位网络号][16位主机号]</br>
+C类: 110    [21位网络号][8位主机号]</br>
+D类: 1110   [28位多播组号]</br>
+E类: 11110  [27位留后待用]</br>
+
+这些32位的地址通常写成四个十进制的数，其中每个整数对应一个字节。</br>
+这种表示方法称作“点分十进制表示法（ Dotted decimal notation）”。</br>
+例如，作者的系统就是一个B类地址，它表示为：218.57.21.5</br>
+区分地址的类型，主要看第一个十进制整数，表格如下:
+<div class="border_area">
+--------------------</br>
+|类型|范围</br>
+|A　|0.0.0.0~127.255.255.255</br>
+|B　|128.0.0.0~191.255.255.255</br>
+|C　|192.0.0.0~223.255.255.255</br>
+|D　|224.0.0.0~239.255.255.255</br>
+|E　|240.0.0.0~247.255.255.255</br>
+-----------------------</br>
+
+
+
+</div>
+其中A、B、C,3类（如下表格）由InternetNIC在全球范围内统一分配，D、E类为特殊地址。
+类别
+<div class="border_area">
+<table log-set-param="table_view" border="1" class="table-view log-set-param">
+<tbody><tr><td width="46" align="center" valign="center"><div class="para">类别</div>
+</td><td width="84" align="center" valign="center"><div class="para">最大网络数</div>
+</td><td width="182" align="center" valign="center"><div class="para">IP地址范围</div>
+</td><td width="71" align="center" valign="center"><div class="para">最大主机数</div>
+</td><td width="193" align="center" valign="center">私有IP地址范围</td></tr><tr><td width="46" align="center" valign="center"><div class="para">A</div>
+</td><td width="84" align="center" valign="center"><div class="para">126（2^7-2)</div>
+</td><td width="182" align="center" valign="center"><div class="para">0.0.0.0-127.255.255.255</div>
+</td><td width="71" align="center" valign="center"><div class="para">16777214</div>
+</td><td width="193" align="center" valign="center"><div class="para">10.0.0.0-10.255.255.255</div>
+</td></tr><tr><td width="46" align="center" valign="center"><div class="para">B</div>
+</td><td width="84" align="center" valign="center"><div class="para">16384(2^14)</div>
+</td><td width="182" align="center" valign="center">128.0.0.0-191.255.255.255</td><td width="71" align="center" valign="center"><div class="para">65534</div>
+</td><td width="193" align="center" valign="center">172.16.0.0-172.31.255.255</td></tr><tr><td width="46" align="center" valign="center"><div class="para">C</div>
+</td><td width="84" align="center" valign="center"><div class="para">2097152(2^21)</div>
+</td><td width="182" align="center" valign="center">192.0.0.0-223.255.255.255</td><td width="71" align="center" valign="center"><div class="para">254</div>
+</td><td width="193" align="center" valign="center">192.168.0.0-192.168.255.255</td></tr></tbody></table>
+</div>
+</p>
+
+<label>A类IP地址:</label></br>
+<p>
+一个A类IP地址是指， 在IP地址的四段号码中，第一段号码为网络号码，剩下的三段号码为本地计算机的号码。</br>
+如果用二进制表示IP地址的话，A类IP地址就由1字节的网络地址和3字节主机地址组成，网络地址的最高位必须</br>
+是“0”。A类IP地址中网络的标识长度为8位，主机标识的长度为24位，A类网络地址数量较少，有126个网络，</br>
+每个网络可以容纳主机数达1600多万台。</br>
+A类IP地址 地址范围1.0.0.0到127.255.255.255  </br>
+（二进制表示为：00000001 00000000 00000000 00000000 - 01111110 11111111 11111111 11111111）。</br>
+最后一个是广播地址。其中10.0.0.0~10.255.255.255为A类局域网地址</br>
+127．0．0．1到127．255．255．255用于回路测试</br>
+</p>
+
+<label>B类IP地址:</label></br>
+<p>
+一个B类IP地址是指，在IP地址的四段号码中，前两段号码为网络号码。如果用二进制表示IP地址的话，</br>
+B类IP地址就由2字节的网络地址和2字节主机地址组成，网络地址的最高位必须是“10”。</br>
+B类IP地址中网络的标识长度为16位，主机标识的长度为16位，B类网络地址适用于中等规模的网络，有16384个网络，</br>
+每个网络所能容纳的计算机数为6万多台。</br>
+B类IP地址地址范围128.0.0.0-191.255.255.255  
+（二进制表示为：10000000 00000000 00000000 00000000----10111111 11111111 11111111 11111111）。 </br>
+最后一个是广播地址。</br>
+B类IP地址的子网掩码为255.255.0.0，每个网络支持的最大主机数为256的2次方-2=65534台。</br>
+其中172.16.0.0-172.31.255.255为B类局域网地址</br>
+</p>
+
+<label>C类IP地址:</label></br>
+<p>
+一个C类IP地址是指，在IP地址的四段号码中，前三段号码为网络号码，剩下的一段号码为本地计算机的号码。</br>
+如果用二进制表示IP地址的话，C类IP地址就由3字节的网络地址和1字节主机地址组成，网络地址的最高位必须是“110”。</br>
+C类IP地址中网络的标识长度为24位，主机标识的长度为8位，C类网络地址数量较多，有209万余个网络。</br>
+适用于小规模的局域网络，每个网络最多只能包含254台计算机。</br>
+C类IP地址范围192.0.0.0-223.255.255.255  </br>
+（二进制表示为: 11000000 00000000 00000000 00000000 - 11011111 11111111 11111111 11111111）。</br>
+C类IP地址的子网掩码为255.255.255.0，每个网络支持的最大主机数为256-2=254台</br>
+其中192.168.0.0-192.168.255.255为C类的局域网地址。</br>
+</p>
+
+<label>类IP地址:</label></br>
+<p>
+D类IP地址在历史上被叫做多播地址(multicast address)，即组播地址。在以太网中，多播地址命名了一组应该</br>
+在这个网络中应用接收到一个分组的站点。多播地址的最高位必须是“1110”，范围从224.0.0.0到239.255.255.255。</br>
+</p>
