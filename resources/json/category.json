@@ -23,7 +23,8 @@
 	,
 	"software":{
 		"title" : "软件编程",
-		"content":[	
+		"content":[
+			{"article":"disk","title":"磁盘详解","date":"2015-12-30"},
 			{"article":"noun_interpretation","title":"JAVA相关名词解释","date":"2015-11-06"},
 			{"article":"vpn_setup","title":"VPN的搭建","date":"2015-10-14"},
 			{"article":"java_annotation3","title":"Java注解(三)--注解处理器的使用","date":"2015-09-28"},
