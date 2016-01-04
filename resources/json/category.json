@@ -2,6 +2,7 @@
 	"life":{
 		"title" : "生活随笔",
 		"content":[
+			{"article":"the_begin_of_2016","title":"2016的开始","date":"2016-01-04"},
 			{"article":"enjoy_your_trouble","title":"享受你的烦恼","date":"2015-11-06"},
 			{"article":"a_letter_to_teacher","title":"恩师表","date":"2015-09-09"},
 			{"article":"life","title":"生活小记","date":"2015-07-08"},
